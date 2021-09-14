@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.NoDeliveryAreaSettleMapper" >
+  <resultMap id="BaseResultMap" type="com.data.display.model.commodity.NoDeliveryAreaSettle" >
+    <id column="n_id" property="n_id" jdbcType="INTEGER" />
+    <result column="s_id" jdbcType="INTEGER" property="s_id" />
+    <result column="shipping_id" jdbcType="INTEGER" property="shipping_id" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="createdate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="updatedate" property="updatedate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    n_id,
+    s_id,
+    shipping_id,
+    city,
+    createdate,
+    updatedate
+  </sql>
+  
+  <sql id="Base_Insert_Values">
+    	#{n_id,jdbcType=INTEGER},
+	    #{s_id,jdbcType=INTEGER},
+	    #{shipping_id,jdbcType=INTEGER},
+	    #{city,jdbcType=VARCHAR},
+	    #{createdate,jdbcType=TIMESTAMP},
+	    #{updatedate,jdbcType=TIMESTAMP}
+    </sql>
+  
+  <!-- 列表 -->
+  <select id="getNoDeliveryAreaSettleData" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.NoDeliveryAreaSettle" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_no_delivery_area_settle
+  </select>
+  
+  <select id="selectById" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.NoDeliveryAreaSettle" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_no_delivery_area_settle
+	   where n_id = #{n_id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByShippingId" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.NoDeliveryAreaSettle" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_no_delivery_area_settle
+	   where shipping_id = #{id}
+  </select>
+  
+  <!-- 删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+     	delete from ym_no_delivery_area_settle where n_id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 添加 -->
+  <insert id="addNoDeliveryAreaSettleData" parameterType="com.data.display.model.commodity.NoDeliveryAreaSettle" useGeneratedKeys="true" keyProperty="id">
+       INSERT INTO ym_no_delivery_area_settle (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  </insert>
+  
+  <!-- 修改 -->
+  <update id="updateNoDelivery" parameterType="com.data.display.model.commodity.NoDeliveryAreaSettle" >
+    update ym_no_delivery_area_settle
+    <set >
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedate != null" >
+        updatedate = #{updatedate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where n_id = #{n_id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

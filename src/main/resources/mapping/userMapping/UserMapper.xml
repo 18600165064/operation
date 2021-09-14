@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.userMapper.UserMapper">
+    <resultMap id="userMap" type="com.data.display.model.user.SysUser">
+        <id property="id" column="ID"/>
+        <result property="username" column="username"/>
+        <result property="password" column="PASSWORD"/>
+        <result property="nick_name" column="nick_name"/>
+        <result property="head_icon" column="head_icon"/>
+        <result property="create_date" column="create_date"/>
+        <result property="phone" column="phone"/>
+        <collection property="staffRelation" ofType="com.data.display.model.user.StaffRelation">
+            <id property="user_id" column="user_id"/>
+	        <result property="director_id" column="director_id" jdbcType="INTEGER"/>
+	        <result property="charge_id" column="charge_id" jdbcType="INTEGER"/>
+	        <result property="level_u" column="level_u" jdbcType="INTEGER"/>
+	        <result property="status" column="status" jdbcType="INTEGER"/>
+	        <result property="nick_name" column="nick_name" jdbcType="VARCHAR"/>
+	        <result property="create_time" column="create_time" jdbcType="TIMESTAMP" />
+        </collection>
+        <collection property="roles" ofType="com.data.display.model.user.SysRole">
+            <result column="name" property="name"/>
+        </collection>
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+    	`id`,
+    	`username`,
+    	`password`,
+    	`nick_name`,
+    	`head_icon`,
+    	`create_date`,
+    	`phone`
+    </sql>
+    
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{username,jdbcType=VARCHAR},
+    	#{password,jdbcType=VARCHAR},
+    	#{nick_name,jdbcType=VARCHAR},
+    	#{head_icon,jdbcType=VARCHAR},
+    	#{create_date,jdbcType=TIMESTAMP},
+    	#{phone,jdbcType=VARCHAR}
+    </sql>
+
+    <!-- 获取所有用户信息 -->
+    <select id="getUserData" parameterType="String" resultMap="userMap">
+        select
+           <include refid="Base_Column_List" />
+        from sys_user
+        where 1=1
+		 <if test="username != null and username != ''">
+             and nick_name like CONCAT('%',#{username},'%')
+        </if>
+        order by create_date desc
+    </select>
+    
+    <!-- 根据用户名获取用户信息及角色信息 -->
+    <select id="findByUserName" parameterType="String" resultMap="userMap">
+        select
+            u.*,
+            r.name
+        from sys_user u
+            LEFT JOIN sys_role_user sru on u.id = sru.sys_user_id
+            LEFT JOIN sys_role r on sru.sys_role_id = r.id
+        where username = #{username}
+    </select>
+    
+    <!-- 根据用户ID获取用户信息及角色信息 -->
+    <select id="findByUserId" parameterType="String" resultMap="userMap">
+        select
+            u.*,
+            r.name
+        from sys_user u
+            LEFT JOIN sys_role_user sru on u.id = sru.sys_user_id
+            LEFT JOIN sys_role r on sru.sys_role_id = r.id
+        where u.id = #{userid}
+    </select>
+    
+    <!-- 新增用户 -->
+    <insert id="addUserData" parameterType="com.data.display.model.user.SysUser" useGeneratedKeys="true" keyProperty="id">
+    	INSERT INTO sys_user 
+    		(<include refid="Base_Column_List" />) 
+    	VALUES 
+    		(<include refid="Base_Insert_Values" />)
+    </insert>
+    
+    <!-- 修改密码 -->
+    <update id="updatePassword" parameterType="java.lang.String">
+        update sys_user
+        set password = #{password}
+        where id = #{userId}
+    </update>
+    
+    <!-- 修改 -->
+    <update id="updateUser" parameterType="com.data.display.model.user.SysUser">
+    	UPDATE sys_user
+  		<set>
+  			<if test="username != null and username != ''">
+	            `username` = #{username,jdbcType=VARCHAR},
+	        </if>
+	        <if test="nick_name != null and nick_name != ''">
+	            `nick_name` = #{nick_name,jdbcType=VARCHAR},
+	        </if>
+	        <if test="phone != null and phone != ''">
+	            `phone` = #{phone,jdbcType=VARCHAR},
+	        </if>
+  		</set>
+  		where `id` = #{id,jdbcType=INTEGER}
+    </update>
+    
+    
+</mapper>

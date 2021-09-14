@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.platformMapper.PlatformMapper">
+
+    <select id="getPlatformData" resultType="java.util.HashMap">
+        SELECT * FROM (
+            (select count(DISTINCT(user_id)) num1 from ym_user_info where DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{strDate})a,
+            (select count(DISTINCT(user_id)) num2 from ym_order where DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{strDate} and pay_status=1)b,
+            (select count(DISTINCT(user_id)) num3 from ym_user_info where DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate})c,
+            (select count(DISTINCT(group_num)) num4 from ym_assemble where DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{strDate})d,
+            (select count(DISTINCT(group_num)) num5 from ym_assemble where DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{strDate} and scale &gt; 0)e,
+            (select count(DISTINCT(group_num)) num6 from ym_assemble where DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} and scale &gt; 0 and scale &lt; 5)f,
+            (select count(DISTINCT(group_num)) num7 from ym_assemble where DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} and scale &gt;= 5 and scale &lt; 8)g,
+            (select count(DISTINCT(group_num)) num8 from ym_assemble where DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} and  scale &gt;= 8)h,
+            (select count(DISTINCT(originator_id)) num9 from ym_assemble where DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{strDate})i,
+            (select count(DISTINCT(originator_id)) num10 from ym_assemble where DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{strDate} and scale &gt; 0)j,
+            (select count(order_no) num11 from ym_order where DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{strDate} and if_primary=1)k,
+            (select count(order_no) num12 from ym_order where DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{strDate} and if_primary=1 and pay_status=1)l,
+            (select count(order_no) num13 from ym_order where DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} and if_primary=1)m,
+            (select count(order_no) num14 from ym_order where DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} and if_primary=1 and pay_status=1)n,
+            (select count(distinct(user_id)) num15 from ym_order where DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} and if_primary=1 and pay_status=1)o,
+            (select count(order_no) num50 from ym_order where DATE_FORMAT(create_time,'%Y-%m-%d') = #{yesterday} and if_primary=1)p,
+            (SELECT COALESCE(SUM(amount),0) as bonus1 FROM ym_bonus_pool_input_bill WHERE DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} AND pool_type = 1)q,
+            (SELECT COALESCE(SUM(amount),0) as bonus2 FROM ym_bonus_pool_input_bill WHERE DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} AND pool_type = 2)r,
+            (SELECT COALESCE(SUM(amount),0) as bonus3 FROM ym_bonus_pool_input_bill WHERE DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} AND pool_type = 3)s,
+            (SELECT COUNT(1) as bonus4 FROM ym_bonus_partener WHERE DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate})t,
+            (SELECT COUNT(1) as bonus5 FROM ym_bonus_stockholder WHERE DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate})u,
+            (SELECT COUNT(1) as bonus6 FROM ym_bonus_partener)v,
+            (SELECT COUNT(1) as bonus7 FROM ym_bonus_stockholder)w,
+            (SELECT COALESCE(SUM(num),0) as salesNum FROM ym_order_detail WHERE order_no IN(
+                SELECT order_no FROM ym_order WHERE if_primary=1 AND pay_status = 1 AND DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate}
+             ))x,
+            (SELECT COUNT(1) as bonus8 FROM ym_bonus_partener WHERE DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{beforeday})y,
+            (SELECT COUNT(1) as bonus9 FROM ym_bonus_stockholder WHERE DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{beforeday})z
+        )
+    </select>
+
+    <select id="getPersonCountData" resultType="java.util.HashMap">
+        SELECT * FROM (
+            (select count(DISTINCT(user_id)) num1 from ym_user_info where create_time &lt;= #{endDate})a,
+            (select count(DISTINCT(user_id)) num2 from ym_order where pay_status=1 and create_time &lt;= #{endDate})b,
+            (select count(DISTINCT(user_id)) num3 from ym_user_info where create_time &gt;= #{beginDate} and create_time &lt;= #{endDate})c,
+            (select count(DISTINCT(group_num)) num4 from ym_assemble where create_time &lt;= #{endDate})d,
+            (select count(DISTINCT(group_num)) num5 from ym_assemble where scale &gt; 0 and create_time &lt;= #{endDate})e,
+            (select count(DISTINCT(group_num)) num6 from ym_assemble where scale &gt; 0 and scale &lt; 5 and create_time &gt;= #{beginDate} and create_time &lt;= #{endDate})f,
+            (select count(DISTINCT(group_num)) num7 from ym_assemble where scale &gt;= 5 and scale &lt; 8 and create_time &gt;= #{beginDate} and create_time &lt;= #{endDate})g,
+            (select count(DISTINCT(group_num)) num8 from ym_assemble where scale &gt;= 8 and create_time &gt;= #{beginDate} and create_time &lt;= #{endDate})h,
+            (select count(DISTINCT(originator_id)) num9 from ym_assemble where create_time &lt;= #{endDate})i,
+            (select count(DISTINCT(originator_id)) num10 from ym_assemble where scale &gt; 0 and create_time &lt;= #{endDate})j,
+            (select count(distinct(user_id)) num15 from ym_order where if_primary=1 and pay_status=1 and create_time &gt;= #{beginDate} and create_time &lt;= #{endDate})o
+        )
+    </select>
+
+    <select id="getOrderCountData" resultType="java.util.HashMap">
+        SELECT * FROM (
+            (
+              select count(a.order_no) num11 from ym_order a
+              LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+              LEFT JOIN ym_product c ON b.skuid = c.skuid
+              where a.if_primary=1 and a.create_time &lt;= #{endDate} and c.spuid = #{spuid}
+            )k,
+            (
+              select count(a.order_no) num12 from ym_order a
+              LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+              LEFT JOIN ym_product c ON b.skuid = c.skuid
+              where a.create_time &lt;= #{endDate} and a.if_primary=1 and a.pay_status=1 and c.spuid = #{spuid}
+            )l,
+            (
+              select count(a.order_no) num13 from ym_order a
+              LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+              LEFT JOIN ym_product c ON b.skuid = c.skuid
+              where a.create_time &gt;= #{beginDate} and a.create_time &lt;= #{endDate} and a.if_primary=1 and c.spuid = #{spuid}
+            )m,
+            (
+              select count(a.order_no) num14 from ym_order a
+              LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+              LEFT JOIN ym_product c ON b.skuid = c.skuid
+              where a.create_time &gt;= #{beginDate} and a.create_time &lt;= #{endDate} and a.if_primary=1 and a.pay_status=1 and c.spuid = #{spuid}
+            )n,
+            (
+              select count(distinct(a.user_id)) num15 from ym_order a
+              LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+              LEFT JOIN ym_product c ON b.skuid = c.skuid
+              where a.create_time &gt;= #{beginDate} and a.create_time &lt;= #{endDate} and a.if_primary=1 and a.pay_status=1 and c.spuid = #{spuid}
+            )o,
+            (
+              select count(a.order_no) num50 from ym_order a
+              LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+              LEFT JOIN ym_product c ON b.skuid = c.skuid
+              where DATE_FORMAT(a.create_time,'%Y-%m-%d') = #{yesterday} and a.if_primary=1 and c.spuid = #{spuid}
+            )p,
+            (
+              SELECT COALESCE(SUM(a.num),0) as count1 FROM ym_order_detail a
+              LEFT JOIN ym_product b ON a.skuid = b.skuid
+              WHERE a.pay_status = 1 AND a.create_time &gt;= #{beginDate} and a.create_time &lt;= #{endDate} and b.spuid = #{spuid}
+            )x,
+            (
+              SELECT COALESCE(SUM(a.num),0) as count2 FROM ym_order_detail a
+              LEFT JOIN ym_product b ON a.skuid = b.skuid
+              WHERE a.pay_status = 1 and b.spuid = #{spuid}
+            )y,
+            (SELECT count(id) as addPerson from ym_grouper WHERE create_time &gt;= #{beginDate} and create_time &lt;= #{endDate} AND forever_valid = 1 and spuid = #{spuid})z
+        )
+    </select>
+
+
+    <select id="getBonusCountData" resultType="java.util.HashMap">
+        SELECT * FROM (
+            (SELECT COALESCE(SUM(amount),0) as bonus10 FROM ym_bonus_pool_input_bill WHERE pool_type = 1 AND spuid = #{spuid})a,
+            (SELECT COALESCE(SUM(amount),0) as bonus11 FROM ym_bonus_pool_input_bill WHERE pool_type = 2 AND spuid = #{spuid})b,
+            (SELECT COALESCE(SUM(amount),0) as bonus12 FROM ym_bonus_pool_input_bill WHERE pool_type = 3 AND spuid = #{spuid})c,
+            (SELECT COALESCE(SUM(amount),0) as bonus1 FROM ym_bonus_pool_input_bill WHERE create_time &gt;= #{beginDate} and create_time &lt;= #{endDate} AND pool_type = 1 AND spuid = #{spuid})q,
+            (SELECT COALESCE(SUM(amount),0) as bonus2 FROM ym_bonus_pool_input_bill WHERE create_time &gt;= #{beginDate} and create_time &lt;= #{endDate} AND pool_type = 2 AND spuid = #{spuid})r,
+            (SELECT COALESCE(SUM(amount),0) as bonus3 FROM ym_bonus_pool_input_bill WHERE create_time &gt;= #{beginDate} and create_time &lt;= #{endDate} AND pool_type = 3 AND spuid = #{spuid})s,
+            (SELECT COUNT(1) as bonus4 FROM ym_bonus_partener WHERE create_time &gt;= #{beginDate} and create_time &lt;= #{endDate} AND spuid = #{spuid})t,
+            (SELECT COUNT(1) as bonus5 FROM ym_bonus_stockholder WHERE create_time &gt;= #{beginDate} and create_time &lt;= #{endDate} AND spuid = #{spuid})u,
+            (SELECT COUNT(1) as bonus6 FROM ym_bonus_partener where spuid = #{spuid})v,
+            (SELECT COUNT(1) as bonus7 FROM ym_bonus_stockholder where spuid = #{spuid})w,
+            (SELECT COUNT(1) as bonus8 FROM ym_bonus_partener WHERE DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{yesterday} AND spuid = #{spuid})x,
+            (SELECT COUNT(1) as bonus9 FROM ym_bonus_stockholder WHERE DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{yesterday} AND spuid = #{spuid})y
+        )
+    </select>
+
+
+    <select id="selectOrderByUser" resultType="com.data.display.model.order.Order">
+        SELECT * FROM ym_order WHERE user_id IN(
+			select user_id from (
+              select t1.user_id,
+              if(find_in_set(uperid, @pids) > 0, @pids := concat(@pids, ',', user_id), 0) as ischild
+              from (
+                   select user_id,uperid from ym_ascription t where 1 = 1 order by uperid, user_id
+                  ) t1,
+                  (select @pids := #{id}) t2
+             ) t3 where ischild != 0
+        ) AND pay_status = 1 GROUP BY user_id
+    </select>
+
+
+    <select id="selectOrderByUser2" resultType="com.data.display.model.order.Order">
+        SELECT * FROM ym_order WHERE user_id IN(
+			select user_id from (
+              select t1.user_id,
+              if(find_in_set(uperid, @pids) > 0, @pids := concat(@pids, ',', user_id), 0) as ischild
+              from (
+                   select user_id,uperid from ym_ascription t where 1 = 1 order by uperid, user_id
+                  ) t1,
+                  (select @pids := #{id}) t2
+             ) t3 where ischild != 0
+        ) AND pay_status = 1 AND DATE_FORMAT(create_time,'%Y-%m-%d') = #{strDate} GROUP BY user_id
+    </select>
+
+    <select id="getBonusParentsData" resultType="com.data.display.model.platform.BonusParents" >
+        SELECT
+          a.user_id,a.spuid,b.nick_name as user_name
+        FROM ym_bonus_partener a
+        LEFT JOIN ym_user_info b ON a.user_id = b.user_id
+        where 1=1
+            and a.spuid = #{spuid}
+        <if test="beginDate != null and beginDate != ''">
+            and a.create_time &gt;= #{beginDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            and a.create_time &lt;= #{endDate}
+        </if>
+      <if test="parentsId != null and parentsId != ''">
+          and a.user_id = #{parentsId}
+      </if>
+    </select>
+
+
+    <select id="getBonusSupplerData" resultType="com.data.display.model.platform.BonusParents" >
+        SELECT
+        a.user_id,b.nick_name as user_name
+        FROM ym_bonus_stockholder a
+        LEFT JOIN ym_user_info b ON a.user_id = b.user_id
+        where 1=1
+            and a.spuid = #{spuid}
+        <if test="beginDate != null and beginDate != ''">
+            and a.create_time &gt;= #{beginDate}
+        </if>
+        <if test="endDate != null and endDate != ''">
+            and a.create_time &lt;= #{endDate}
+        </if>
+        <if test="parentsId != null and parentsId != ''">
+            and a.user_id = #{parentsId}
+        </if>
+    </select>
+
+
+
+</mapper>

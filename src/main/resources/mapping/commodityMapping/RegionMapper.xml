@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.RegionMapper" >
+  <resultMap id="BaseResultMap" type="com.data.display.model.commodity.Region" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="region_id" jdbcType="INTEGER" property="region_id" />
+    <result column="local_name" jdbcType="VARCHAR" property="local_name" />
+    <result column="region_path" jdbcType="INTEGER" property="region_path" />
+    <result column="p_region_id" jdbcType="VARCHAR" property="p_region_id" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,
+    region_id, 
+    local_name, 
+    region_path,
+    p_region_id
+  </sql>
+  
+  <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+	    #{region_id,jdbcType=INTEGER}, 
+	    #{local_name,jdbcType=VARCHAR}, 
+	    #{region_path,jdbcType=INTEGER}, 
+	    #{p_region_id,jdbcType=VARCHAR}
+    </sql>
+  
+  <select id="getOneData" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.Region" >
+	    SELECT 
+	    	<include refid="Base_Column_List" /> 
+	    FROM ym_region WHERE region_path = region_id
+  </select>
+  
+  <select id="getTwoData" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.Region" >
+	    SELECT 
+	    	<include refid="Base_Column_List" /> 
+	    FROM ym_region WHERE 
+	    region_path = #{region_id} and region_id != #{region_id}
+  </select>
+  
+  <select id="selectByRid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    SELECT 
+	    	<include refid="Base_Column_List" /> 
+	    FROM ym_region WHERE region_id =#{id}
+  </select>
+  
+  
+  <!-- 查询一二级列表 -->
+  <select id="getRegionData" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.Region" >
+	    SELECT 
+	    	<include refid="Base_Column_List" /> 
+	    FROM ym_region WHERE region_path IN(
+			SELECT region_path FROM ym_region WHERE region_id = region_path 
+		) GROUP BY region_path,region_id
+  </select>
+  
+</mapper>

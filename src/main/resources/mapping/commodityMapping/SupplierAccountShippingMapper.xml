@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.SupplierAccountShippingMapper" >
+  <resultMap id="BaseResultMap" type="com.data.display.model.commodity.SupplierAccountShipping" >
+    <id column="sas_id" property="sas_id" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="default_number" property="default_number" jdbcType="INTEGER" />
+    <result column="default_price" jdbcType="DECIMAL" property="default_price" />
+    <result column="increa_number" property="increa_number" jdbcType="INTEGER" />
+    <result column="increa_price" jdbcType="DECIMAL" property="increa_price" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+    <result column="templet_name" jdbcType="VARCHAR" property="templet_name" />
+    <result column="s_id" jdbcType="INTEGER" property="s_id" />
+    <result column="fixed_shipping" jdbcType="DECIMAL" property="fixed_shipping" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sas_id,
+    type,
+    default_number,
+    default_price,
+    increa_number,
+    increa_price,
+    status,
+    create_time,
+    update_time,
+    templet_name,
+    s_id,
+    fixed_shipping
+  </sql>
+  
+  <sql id="Base_Insert_Values">
+    	#{sas_id,jdbcType=INTEGER},
+    	#{type,jdbcType=INTEGER},
+    	#{default_number,jdbcType=INTEGER},
+    	#{default_price,jdbcType=DECIMAL},
+    	#{increa_number,jdbcType=INTEGER},
+    	#{increa_price,jdbcType=DECIMAL},
+    	#{status,jdbcType=INTEGER},
+	    #{create_time,jdbcType=TIMESTAMP},
+    	#{update_time,jdbcType=TIMESTAMP},
+    	#{templet_name,jdbcType=VARCHAR},
+	    #{s_id,jdbcType=INTEGER},
+	    #{fixed_shipping,jdbcType=DECIMAL}
+    </sql>
+  
+  <!-- 列表 -->
+  <select id="getSupplierAccountShippingData" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.SupplierAccountShipping" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_supplier_account_shipping
+	    where 1=1
+	    <if test="s_id != null">
+	    	<if test="s_id != 1">
+	    		and s_id = #{s_id}
+	    	</if>
+	    </if>
+	    order by create_time desc
+  </select>
+  
+  <select id="selectById" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.SupplierAccountShipping" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_supplier_account_shipping
+	   where sas_id = #{sas_id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+     	delete from ym_supplier_account_shipping where sas_id = #{sas_id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 添加 -->
+  <insert id="addSupplierAccountShipping" parameterType="com.data.display.model.commodity.SupplierAccountShipping" useGeneratedKeys="true" keyProperty="sas_id">
+       INSERT INTO ym_supplier_account_shipping (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  </insert>
+  
+  <!-- 修改 -->
+  <update id="editSupplierAccountShipping" parameterType="com.data.display.model.commodity.SupplierAccountShipping" >
+    update ym_supplier_account_shipping
+    <set >
+      <if test="type" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="default_number != null" >
+        default_number = #{default_number,jdbcType=INTEGER},
+      </if>
+      <if test="default_price != null" >
+        default_price = #{default_price,jdbcType=DECIMAL},
+      </if>
+      <if test="increa_number != null" >
+        increa_number = #{increa_number,jdbcType=INTEGER},
+      </if>
+      <if test="increa_price != null" >
+        increa_price = #{increa_price,jdbcType=DECIMAL},
+      </if>
+       <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="create_time != null" >
+        create_time = #{create_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="update_time != null" >
+        update_time = #{update_time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="templet_name != null and templet_name != ''" >
+        templet_name = #{templet_name,jdbcType=VARCHAR},
+      </if>
+      <if test="s_id != null" >
+        s_id = #{s_id,jdbcType=INTEGER},
+      </if>
+      <if test="fixed_shipping != null" >
+        fixed_shipping = #{fixed_shipping,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where sas_id = #{sas_id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

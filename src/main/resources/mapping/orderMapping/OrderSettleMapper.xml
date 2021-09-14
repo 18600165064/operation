@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.OrderSettleMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.order.OrderSettle">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="sub_order_no" property="sub_order_no" jdbcType="VARCHAR" />
+		<result column="sub_order_no_skuid" property="sub_order_no_skuid" jdbcType="VARCHAR" />
+		<result column="batch_no" property="batch_no" jdbcType="VARCHAR" />
+		<result column="supplier_id" property="supplier_id" jdbcType="INTEGER" />
+		<result column="skuid" property="skuid" jdbcType="INTEGER" />
+		<result column="sku_name" property="sku_name" jdbcType="VARCHAR" />
+		<result column="sku_image" property="sku_image" jdbcType="VARCHAR" />
+		<result column="supply_price" property="supply_price" jdbcType="DECIMAL" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="subtotal" property="subtotal" jdbcType="DECIMAL" />
+		<result column="refund_amt" property="refund_amt" jdbcType="DECIMAL" />
+		<result column="settle_amt" property="settle_amt" jdbcType="DECIMAL" />
+		<result column="settle_status" property="settle_status" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="freight" property="freight" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,user_id,order_no,sub_order_no,sub_order_no_skuid,batch_no,supplier_id,skuid,sku_name,sku_image,supply_price,price,num,subtotal,
+		refund_amt,settle_amt,settle_status,create_time,freight
+	</sql>
+	
+	<sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{user_id,jdbcType=INTEGER},
+    	#{order_no,jdbcType=VARCHAR},
+    	#{sub_order_no,jdbcType=VARCHAR},
+    	#{sub_order_no_skuid,jdbcType=VARCHAR},
+    	#{batch_no,jdbcType=VARCHAR},
+    	#{supplier_id,jdbcType=INTEGER},
+    	#{skuid,jdbcType=INTEGER},
+    	#{sku_name,jdbcType=VARCHAR},
+    	#{sku_image,jdbcType=VARCHAR},
+    	#{supply_price,jdbcType=DECIMAL},
+    	#{price,jdbcType=DECIMAL},
+    	#{num,jdbcType=INTEGER},
+    	#{subtotal,jdbcType=DECIMAL},
+    	#{refund_amt,jdbcType=DECIMAL},
+    	#{settle_amt,jdbcType=DECIMAL},
+    	#{settle_status,jdbcType=INTEGER},
+    	#{create_time,jdbcType=TIMESTAMP},
+    	#{freight,jdbcType=DECIMAL}
+    </sql>
+    
+    <insert id="addOrderSettle" parameterType="com.data.display.model.order.OrderSettle">
+		 INSERT INTO ym_order_settle (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  	</insert>
+	
+	<!-- 列表 -->
+	<select id="getOrderSettleData" resultMap="BaseResultMap" parameterType="com.data.display.model.order.OrderSettle">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order_settle
+		where 1=1 
+		<if test="batch_no != null">
+			and batch_no = #{batch_no}
+		</if>
+		<if test="settle_status != null">
+			and settle_status = #{settle_status}
+		</if>
+		<if test="supplier_id != null">
+			and supplier_id = #{supplier_id}
+		</if>
+		<if test="order_no != null and order_no != ''">
+			and order_no = #{order_no}
+		</if>
+		<if test="sub_order_no != null and sub_order_no != ''">
+			and sub_order_no = #{sub_order_no}
+		</if>
+		
+		order by create_time desc
+	</select>
+	
+	
+	<select id="getOrderSettleList" resultMap="BaseResultMap" parameterType="com.data.display.model.order.OrderSettle">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order_settle
+		where 1=1 
+		<if test="batch_no != null">
+			and batch_no = #{batch_no}
+		</if>
+		<if test="settle_status != null">
+			and settle_status = #{settle_status}
+		</if>
+		<if test="supplier_id != null">
+			and supplier_id = #{supplier_id}
+		</if>
+	</select>
+	
+	<select id="count" parameterType="com.data.display.model.order.OrderSettle" resultType="java.lang.Integer">
+		select count(1) from ym_order_settle
+		where 1=1 
+		<if test="batch_no != null">
+			and batch_no = #{batch_no}
+		</if>
+		<if test="settle_status != null">
+			and settle_status = #{settle_status}
+		</if>
+	</select>
+	
+	
+	<select id="countBySettleStatus" parameterType="com.data.display.model.order.OrderSettle" resultType="Object">
+		select sum(settle_amt) from ym_order_settle
+		where 1=1 
+		<if test="supplier_id != null">
+			and supplier_id = #{supplier_id}
+		</if>
+		<if test="settle_status != null">
+			and settle_status = #{settle_status}
+		</if>
+	</select>
+	
+	
+	<update id="updateOrderSettle" parameterType="com.data.display.model.order.OrderSettle">
+		update ym_order_settle
+		<set>
+			<if test="settle_status != null">
+				settle_status = #{settle_status,jdbcType=TINYINT},
+			</if>
+			<if test="batch_no != null">
+				batch_no = #{batch_no,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	
+	
+	<update id="updateOrderSettleOthers" parameterType="com.data.display.model.order.OrderSettle">
+		update ym_order_settle
+		<set>
+			<if test="settle_status != null">
+				settle_status = #{settle_status,jdbcType=TINYINT},
+			</if>
+			<if test="batch_no != null">
+				batch_no = #{batch_no,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where settle_status = #{settle_status2,jdbcType=TINYINT}
+				and supplier_id = #{supplier_id}
+	</update>
+	
+</mapper>

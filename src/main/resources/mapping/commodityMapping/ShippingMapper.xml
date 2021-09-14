@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.ShippingMapper" >
+  <resultMap id="BaseResultMap" type="com.data.display.model.commodity.Shipping" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="s_id" jdbcType="INTEGER" property="s_id" />
+    <result column="type" jdbcType="DECIMAL" property="type" />
+    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+    <result column="paid_shipping" jdbcType="DECIMAL" property="paid_shipping" />
+    <result column="full" jdbcType="DECIMAL" property="full" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,
+    name,
+    s_id,
+    type,
+    create_time,
+    paid_shipping,
+    full
+  </sql>
+  
+  <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{name,jdbcType=VARCHAR},
+	    #{s_id,jdbcType=INTEGER},
+	    #{type,jdbcType=DECIMAL},
+	    #{create_time,jdbcType=TIMESTAMP},
+	    #{full,jdbcType=DECIMAL}
+    </sql>
+  
+  <!-- 列表 -->
+  <select id="getShippingData" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.Shipping" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_shipping
+  </select>
+  
+  <select id="selectById" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.Shipping" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_shipping
+	   where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+     	delete from ym_shipping where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <!-- 添加 -->
+  <insert id="addShipping" parameterType="com.data.display.model.commodity.Shipping" useGeneratedKeys="true" keyProperty="id">
+       INSERT INTO ym_shipping (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  </insert>
+  
+  <!-- 修改 -->
+  <update id="editShipping" parameterType="com.data.display.model.commodity.Shipping" >
+    update ym_category
+    <set >
+      <if test="name != null and name != ''" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="s_id != null" >
+        s_id = #{s_id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=DECIMAL},
+      </if>
+      <if test="create_time != null" >
+        create_time = #{create_time,jdbcType=TIMESTAMP},
+      </if>
+       <if test="full != null" >
+        full = #{full,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+</mapper>

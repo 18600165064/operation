@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.SpuDescMapper" >
+  <resultMap id="BaseResultMap" type="com.data.display.model.commodity.SpuDesc" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="skuid" jdbcType="VARCHAR" property="skuid" />
+    <result column="spuid" jdbcType="VARCHAR" property="spuid" />
+    <result column="skudesc" jdbcType="VARCHAR" property="skudesc" />
+    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,
+    skuid, 
+    spuid, 
+    skudesc,
+    create_time
+  </sql>
+  
+  <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+	    #{skuid,jdbcType=VARCHAR}, 
+	    #{spuid,jdbcType=VARCHAR}, 
+	    #{skudesc,jdbcType=VARCHAR},
+	    #{create_time,jdbcType=TIMESTAMP}
+    </sql>
+  
+  <!-- 列表 -->
+  <select id="getSkuDescData" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.SpuDesc" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_skudesc
+  </select>
+  
+  <select id="selectByOther" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.SpuDesc" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_skudesc
+	    where spuid = #{spuid}
+  </select>
+  
+  <!-- 添加 -->
+  <insert id="addSpuDesc" parameterType="com.data.display.model.commodity.SpuDesc" useGeneratedKeys="true" keyProperty="id">
+       INSERT INTO ym_skudesc (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  </insert>
+  
+   <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	    select
+	    <include refid="Base_Column_List" />
+	    from ym_skudesc
+	    where id = #{id}
+  </select>
+  
+  
+  <!-- 修改 -->
+  <update id="updateSpuDesc" parameterType="com.data.display.model.commodity.SpuDesc" >
+    update ym_skudesc
+    <set >
+      <if test="skudesc != null" >
+        skudesc = #{skudesc,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where spuid = #{spuid,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

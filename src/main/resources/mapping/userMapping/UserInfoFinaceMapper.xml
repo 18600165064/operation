@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.userMapper.UserInfoFinaceMapper">
+    <resultMap id="userInfoFinaceMap" type="com.data.display.model.user.UserInfoFinace">
+    	<id column="id" property="id" jdbcType="INTEGER" />
+        <result column="user_id" property="user_id" jdbcType="INTEGER" />
+        <result column="frozen" property="frozen" jdbcType="DECIMAL" />
+        <result column="can_withdraw" property="can_withdraw" jdbcType="DECIMAL" />
+        <result column="already_withdraw" property="already_withdraw" jdbcType="DECIMAL" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="can_withdraw_times" property="can_withdraw_times" jdbcType="INTEGER" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+    	id,
+    	user_id,
+    	frozen,
+    	can_withdraw,
+    	already_withdraw,
+    	create_time,
+    	can_withdraw_times
+    </sql>
+    
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{user_id,jdbcType=INTEGER},
+    	#{frozen,jdbcType=DECIMAL},
+    	#{can_withdraw,jdbcType=DECIMAL},
+    	#{already_withdraw,jdbcType=DECIMAL},
+    	#{create_time,jdbcType=TIMESTAMP},
+    	#{can_withdraw_times,jdbcType=INTEGER}
+    </sql>
+
+   
+    <select id="getData" parameterType="com.data.display.model.user.UserInfoFinace" resultMap="userInfoFinaceMap">
+        select
+           <include refid="Base_Column_List" />
+        from ym_user_finace
+        WHERE 1=1
+        <if test="user_id != null">
+        	and user_id = #{user_id}
+        </if>
+        order by create_time desc
+    </select>
+    
+    <select id="selectByUserId" parameterType="com.data.display.model.user.UserInfoFinace" resultMap="userInfoFinaceMap">
+        select
+           <include refid="Base_Column_List" />
+        from ym_user_finace
+        WHERE  user_id = #{user_id}
+    </select>
+     
+    <update id="updateUserInfoFinace" parameterType="com.data.display.model.user.UserInfoFinace">
+    	UPDATE ym_user_finace
+  		<set>
+  			<if test="frozen != null">
+	            frozen = #{frozen,jdbcType=DECIMAL},
+	        </if>
+	        <if test="can_withdraw != null">
+	            can_withdraw = #{can_withdraw,jdbcType=DECIMAL},
+	        </if>
+	        <if test="already_withdraw != null">
+	            already_withdraw = #{already_withdraw,jdbcType=DECIMAL},
+	        </if>
+			<if test="can_withdraw_times != null">
+				can_withdraw_times = #{can_withdraw_times,jdbcType=INTEGER},
+			</if>
+  		</set>
+  		where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+	<update id="updateUserFinaceByUserId">
+		UPDATE ym_user_finace
+		set
+		can_withdraw = #{canAmount,jdbcType=DECIMAL},
+		already_withdraw = #{alMoney,jdbcType=DECIMAL} - #{userMoney,jdbcType=DECIMAL},
+		can_withdraw_times = #{withdrawTimes,jdbcType=INTEGER}
+		where user_id = #{userId,jdbcType=INTEGER}
+	</update>
+    
+    <update id="updateUserInfoFinaceByUserid" parameterType="java.lang.String">
+    	UPDATE ym_user_finace
+  		<set>
+	        <if test="updateId != null">
+	            user_id = #{updateId},
+	        </if>
+  		</set>
+  		where user_id = #{userId}
+    </update>
+    
+</mapper>

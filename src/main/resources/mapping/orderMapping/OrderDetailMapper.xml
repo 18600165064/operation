@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.OrderDetailMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.order.OrderDetail">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="sub_order_no" property="sub_order_no" jdbcType="VARCHAR" />
+		<result column="skuid" property="skuid" jdbcType="VARCHAR" />
+		<result column="sku_name" property="sku_name" jdbcType="VARCHAR" />
+		<result column="imagePath" property="imagePath" jdbcType="VARCHAR" />
+		<result column="num" property="num" jdbcType="INTEGER" />
+		<result column="supply_price" property="supply_price" jdbcType="DECIMAL" />
+		<result column="price" property="price" jdbcType="DECIMAL" />
+		<result column="subtotal" property="subtotal" jdbcType="DECIMAL" />
+		<result column="commission" property="commission" jdbcType="DECIMAL" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="pay_status" property="pay_status" jdbcType="INTEGER" />
+		<result column="refund_reason" property="refund_reason" jdbcType="VARCHAR" />
+		<result column="refund_amt" property="refund_amt" jdbcType="DECIMAL" />
+		<result column="refund_num" property="refund_num" jdbcType="INTEGER" />
+		<result column="refund_remark" property="refund_remark" jdbcType="VARCHAR" />
+		<result column="should_liquidation_money" property="should_liquidation_money" jdbcType="DECIMAL" />
+		<result column="refund_voucher" property="refund_voucher" jdbcType="VARCHAR" />
+		<result column="refund_addr_id" property="refund_addr_id" jdbcType="INTEGER" />
+		<result column="refund_name" property="refund_name" jdbcType="VARCHAR" />
+		<result column="refund_mobile" property="refund_mobile" jdbcType="VARCHAR" />
+		<result column="refund_addr_detail" property="refund_addr_detail" jdbcType="VARCHAR" />
+		<result column="trans_com" property="trans_com" jdbcType="VARCHAR" />
+		<result column="trans_id" property="trans_id" jdbcType="VARCHAR" />
+		<result column="refund_status" property="refund_status" jdbcType="VARCHAR" />
+		<result column="apply_time" property="apply_time" jdbcType="TIMESTAMP" />
+		<result column="kefu_remark" property="kefu_remark" jdbcType="VARCHAR" />
+		<result column="kefu_time" property="kefu_time" jdbcType="TIMESTAMP" />
+		<result column="supplier_time" property="supplier_time" jdbcType="TIMESTAMP" />
+		<result column="check_time" property="check_time" jdbcType="TIMESTAMP" />
+		<result column="package_id" property="package_id" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		user_id,
+		order_no,
+		sub_order_no,
+		skuid,
+		sku_name,
+		imagePath,
+		num,
+		supply_price,
+		price,
+		subtotal,
+		commission,
+		create_time,
+		pay_status,
+		refund_reason,
+		refund_amt,
+		refund_num,
+		refund_remark,
+		should_liquidation_money,
+		refund_voucher,
+		refund_addr_id,
+		refund_name,
+		refund_mobile,
+		refund_addr_detail,
+		trans_com,
+		trans_id,
+		refund_status,
+		apply_time,
+		kefu_remark,
+		kefu_time,
+		supplier_time,
+		check_time,
+		package_id
+	</sql>
+	
+	<!-- 列表 -->
+	<select id="getOrderDetailData" resultMap="BaseResultMap" parameterType="com.data.display.model.order.OrderDetail">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order_detail
+	</select>
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order_detail
+		where id = #{id}
+	</select>
+	
+	<select id="selectByOthers" resultMap="BaseResultMap" parameterType="com.data.display.model.order.OrderDetail">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order_detail
+		where 1=1
+		<if test="user_id != null">
+			and user_id = #{user_id}
+		</if>
+		<if test="order_no != null">
+			and order_no = #{order_no}
+		</if>
+		<if test="skuid != null">
+			and skuid = #{skuid}
+		</if>
+		<if test="sub_order_no != null">
+			and sub_order_no = #{sub_order_no}
+		</if>
+	</select>
+	
+	<update id="updateOrderDetail" parameterType="com.data.display.model.order.OrderDetail">
+		update ym_order_detail
+		<set>
+			<if test="supply_price != null">
+				supply_price = #{supply_price,jdbcType=DECIMAL},
+			</if>
+			<if test="refund_amt != null">
+				refund_amt = #{refund_amt,jdbcType=DECIMAL},
+			</if>
+			<if test="refund_num != null">
+				refund_num = #{refund_num,jdbcType=INTEGER},
+			</if>
+			<if test="refund_remark != null">
+				refund_remark = #{refund_remark,jdbcType=VARCHAR},
+			</if>
+			<if test="refund_status != null">
+				refund_status = #{refund_status,jdbcType=VARCHAR},
+			</if>
+			<if test="refund_name != null">
+				refund_name = #{refund_name,jdbcType=VARCHAR},
+			</if>
+			<if test="refund_reason != null">
+				refund_reason = #{refund_reason,jdbcType=VARCHAR},
+			</if>
+			<if test="kefu_remark != null">
+				kefu_remark = #{kefu_remark,jdbcType=VARCHAR},
+			</if>
+			<if test="kefu_time != null">
+				kefu_time = #{kefu_time,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	
+	
+	<update id="updateOrderDetailByOrderNo" parameterType="com.data.display.model.order.OrderDetail">
+		update ym_order_detail
+		<set>
+			<if test="check_time != null">
+				check_time = #{check_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="kefu_time != null">
+				kefu_time = #{kefu_time,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where order_no = #{order_no,jdbcType=VARCHAR}
+	</update>
+	
+	
+</mapper>

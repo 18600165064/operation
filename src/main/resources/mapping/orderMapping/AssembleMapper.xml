@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.AssembleMapper">
+    <resultMap id="BaseResultMap" type="com.data.display.model.order.Assemble">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="originator_id" property="originator_id" jdbcType="INTEGER" />
+        <result column="originator_head" property="originator_head" jdbcType="VARCHAR" />
+        <result column="participant_id" property="participant_id" jdbcType="INTEGER" />
+        <result column="order_no" property="order_no" jdbcType="VARCHAR" />
+        <result column="group_num" property="group_num" jdbcType="VARCHAR" />
+        <result column="spuid" property="spuid" jdbcType="VARCHAR" />
+        <result column="skuid" property="skuid" jdbcType="VARCHAR" />
+        <result column="scale" property="scale" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+        <result column="start_time" property="start_time" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
+        <result column="complete_time" property="complete_time" jdbcType="TIMESTAMP" />
+        <result column="participants_num" property="participants_num" jdbcType="INTEGER" />
+        <result column="disparity" property="disparity" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        a.id,
+        a.originator_id,
+        b.nick_name AS 'originator_name',
+        a.originator_head,
+        a.participant_id,
+        c.nick_name AS 'participant_name',
+        a.order_no,
+        a.group_num,
+        a.spuid,
+        a.skuid,
+        a.scale,
+        a.status,
+        a.create_time,
+        a.update_time,
+        a.start_time,
+        a.end_time,
+        a.complete_time,
+        a.participants_num,
+        a.disparity
+    </sql>
+
+    <select id="getAssembleData" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Assemble">
+        select
+        <include refid="Base_Column_List" />
+        from ym_assemble a
+        LEFT JOIN ym_user_info b ON a.originator_id = b.user_id
+        LEFT JOIN ym_user_info c ON a.participant_id = c.user_id
+        where a.status = 1 and a.participant_id = #{participant_id}
+    </select>
+
+</mapper>

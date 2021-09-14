@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.userMapper.UserAddressMapper">
+    <resultMap id="userAddressMap" type="com.data.display.model.user.UserAddress">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="provice" property="provice" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="district" property="district" jdbcType="VARCHAR" />
+		<result column="town" property="town" jdbcType="VARCHAR" />
+		<result column="detai_addr" property="detai_addr" jdbcType="VARCHAR" />
+		<result column="defalt" property="defalt" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="provice_id" property="provice_id" jdbcType="VARCHAR" />
+		<result column="city_id" property="city_id" jdbcType="VARCHAR" />
+		<result column="district_id" property="district_id" jdbcType="VARCHAR" />
+		<result column="town_id" property="town_id" jdbcType="VARCHAR" />
+		<result column="tag_id" property="tag_id" jdbcType="VARCHAR" />
+		<result column="tag_name" property="tag_name" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+		id,
+    	user_id,
+    	name,
+    	phone,
+    	provice,
+    	city,
+    	district,
+    	town,
+    	detai_addr,
+    	defalt,
+    	create_time,
+    	provice_id,
+    	city_id,
+    	district_id,
+    	town_id,
+    	tag_id,
+    	tag_name
+    </sql>
+    
+    <select id="selectById" resultType="com.data.display.model.user.UserAddress" parameterType="java.lang.String">
+       SELECT <include refid="Base_Column_List" /> FROM ym_user_address WHERE id = #{id}
+    </select>
+    
+</mapper>

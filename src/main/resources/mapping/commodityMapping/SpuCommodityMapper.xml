@@ -1,0 +1,710 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.SpuCommodityMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.commodity.SpuCommodity">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="spuid" property="spuid" jdbcType="VARCHAR" />
+		<result column="spu_name" property="spu_name" jdbcType="VARCHAR" />
+		<result column="spu_spec" property="spu_spec" jdbcType="VARCHAR" />
+		<result column="catagory_id" property="catagory_id" jdbcType="INTEGER" />
+		<result column="s_id" property="s_id" jdbcType="INTEGER" />
+		<result column="brand_name" property="brand_name" jdbcType="VARCHAR" />
+		<result column="spu_keyword" property="spu_keyword" jdbcType="VARCHAR" />
+		<result column="first_category" property="first_category" jdbcType="INTEGER" />
+		<result column="second_category" property="second_category" jdbcType="INTEGER" />
+		<result column="third_category" property="third_category" jdbcType="INTEGER" />
+		<result column="first_category_name" property="first_category_name" jdbcType="VARCHAR" />
+		<result column="second_category_name" property="second_category_name" jdbcType="VARCHAR" />
+		<result column="third_category_name" property="third_category_name" jdbcType="VARCHAR" />
+		<result column="image" property="image" jdbcType="VARCHAR" />
+		<result column="video_url" property="video_url" jdbcType="VARCHAR" />
+		<result column="video_image" property="video_image" jdbcType="VARCHAR" />
+		<result column="tag" property="tag" jdbcType="VARCHAR" />
+		<result column="statement" property="statement" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="maintain_status" property="maintain_status" jdbcType="INTEGER" />
+		<result column="valid_duration" jdbcType="DECIMAL" property="valid_duration" />
+		<result column="spu_subheading" property="spu_subheading" jdbcType="VARCHAR" />
+		<result column="banner_image" property="banner_image" jdbcType="VARCHAR" />
+		<result column="is_banner" property="is_banner" jdbcType="INTEGER" />
+		<result column="is_top" property="is_top" jdbcType="INTEGER" />
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+		<result column="supply_price" jdbcType="DECIMAL" property="supply_price" />
+		<result column="group_price_three" jdbcType="DECIMAL" property="group_price_three" />
+		<result column="group_price_five" jdbcType="DECIMAL" property="group_price_five" />
+		<result column="group_price_eight" jdbcType="DECIMAL" property="group_price_eight" />
+		<result column="commission_price_three" jdbcType="DECIMAL" property="commission_price_three" />
+		<result column="commission_price_five" jdbcType="DECIMAL" property="commission_price_five" />
+		<result column="commission_price_eight" jdbcType="DECIMAL" property="commission_price_eight" />
+		<result column="refund_price" jdbcType="DECIMAL" property="refund_price" />
+		<result column="market_price" jdbcType="DECIMAL" property="market_price" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="commission" jdbcType="DECIMAL" property="commission" />
+		<result column="reduce" jdbcType="DECIMAL" property="reduce" />
+		<result column="sale_amount" property="sale_amount" jdbcType="INTEGER" />
+		<result column="on_sale" property="on_sale" jdbcType="INTEGER" />
+		<result column="service_price" jdbcType="DECIMAL" property="service_price" />
+		<result column="three_difference_price" jdbcType="DECIMAL" property="three_difference_price" />
+		<result column="five_difference_price" jdbcType="DECIMAL" property="five_difference_price" />
+		<result column="eight_difference_price" jdbcType="DECIMAL" property="eight_difference_price" />
+		<result column="sub_dis_fee" jdbcType="DECIMAL" property="sub_dis_fee" />
+		<result column="sub_dis_value" property="sub_dis_value" jdbcType="INTEGER" />
+		<result column="maintain_start_time" property="maintain_start_time" jdbcType="TIMESTAMP" />
+		<result column="maintain_end_time" property="maintain_end_time" jdbcType="TIMESTAMP" />
+		<result column="interval_value" property="interval_value" jdbcType="VARCHAR" />
+		<result column="success_image" property="success_image" jdbcType="VARCHAR" />
+		<result column="success_gif_image" property="success_gif_image" jdbcType="VARCHAR" />
+	</resultMap>
+	<resultMap id="ResultMapWithBLOBs" type="com.data.display.model.commodity.SpuCommodity"
+		extends="BaseResultMap">
+		<result column="images" property="images" jdbcType="LONGVARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, spuid, spu_name, spu_spec, catagory_id, s_id, brand_name,spu_keyword,
+		first_category, second_category,
+		third_category, first_category_name, second_category_name, third_category_name,
+		image,
+		video_url, video_image, tag, statement, create_time,maintain_status,valid_duration,
+		spu_subheading,
+		banner_image,
+		is_banner,
+		is_top,
+		update_time,
+		supply_price,
+		group_price_three,
+		group_price_five,
+		group_price_eight,
+		commission_price_three,
+		commission_price_five,
+		commission_price_eight,
+		refund_price,
+		market_price,
+		price,
+		commission,
+		reduce,
+		sale_amount,
+		on_sale,
+		service_price,
+		three_difference_price,
+		five_difference_price,
+		eight_difference_price,
+		sub_dis_fee,
+		sub_dis_value,
+		maintain_start_time,
+		maintain_end_time,
+		interval_value,
+		success_image,
+		success_gif_image
+	</sql>
+	<sql id="Blob_Column_List">
+		images
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="com.data.display.model.commodity.SpuCommodity">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from ym_pro_spu where 1=1
+		<if test="s_id != null">
+			<if test="s_id != 1">
+			and s_id = #{s_id,jdbcType=INTEGER}
+		</if>
+		</if>
+		<if test="id != null">
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="spuid != null and spuid != ''">
+			and spuid = #{spuid,jdbcType=VARCHAR}
+		</if>
+		<if test="spu_name != null and spu_name != ''">
+			and spu_name = #{spu_name,jdbcType=VARCHAR}
+		</if>
+		<if test="first_category_name != null and first_category_name != ''">
+			and first_category_name = #{first_category_name,jdbcType=VARCHAR}
+		</if>
+		<if test="second_category_name != null and second_category_name != ''">
+			and second_category_name = #{second_category_name,jdbcType=VARCHAR}
+		</if>
+		<if test="third_category_name != null and third_category_name != ''">
+			and third_category_name = #{third_category_name,jdbcType=VARCHAR}
+		</if>
+		order by create_time desc
+	</select>
+
+	<select id="selectAll" resultMap="ResultMapWithBLOBs">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from ym_pro_spu
+		WHERE on_sale = 0
+		order by create_time desc
+	</select>
+
+	<select id="getExamineSpuData" resultMap="ResultMapWithBLOBs" parameterType="com.data.display.model.commodity.SpuCommodity">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from ym_pro_spu
+		where price != 0 AND supply_price != 0 AND market_price != 0 AND commission != 0
+		<if test="spuid != null and spuid != ''">
+			and spuid = #{spuid,jdbcType=VARCHAR}
+		</if>
+		<if test="spu_name != null and spu_name != ''">
+			and spu_name = #{spu_name,jdbcType=VARCHAR}
+		</if>
+		<if test="first_category_name != null and first_category_name != ''">
+			and first_category_name = #{first_category_name,jdbcType=VARCHAR}
+		</if>
+		<if test="second_category_name != null and second_category_name != ''">
+			and second_category_name = #{second_category_name,jdbcType=VARCHAR}
+		</if>
+		<if test="third_category_name != null and third_category_name != ''">
+			and third_category_name = #{third_category_name,jdbcType=VARCHAR}
+		</if>
+		order by create_time desc
+	</select>
+	
+	<select id="selectById" resultMap="ResultMapWithBLOBs" parameterType="String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from ym_pro_spu
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectByIsBanner" resultMap="ResultMapWithBLOBs" parameterType="String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from ym_pro_spu
+		where is_banner = #{is_banner,jdbcType=INTEGER}
+	</select>
+	
+	<select id="selectBySpuid" resultMap="ResultMapWithBLOBs" parameterType="String">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from ym_pro_spu
+		where spuid = #{spuid,jdbcType=VARCHAR}
+	</select>
+	
+	<delete id="deleteByPrimaryKey" parameterType="String">
+		delete from ym_pro_spu
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	
+	<insert id="insertSelective" parameterType="com.data.display.model.commodity.SpuCommodity">
+		insert into ym_pro_spu
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="spuid != null">
+				spuid,
+			</if>
+			<if test="spu_name != null">
+				spu_name,
+			</if>
+			<if test="spu_spec != null">
+				spu_spec,
+			</if>
+			<if test="catagory_id != null">
+				catagory_id,
+			</if>
+			<if test="s_id != null">
+				s_id,
+			</if>
+			<if test="brand_name != null">
+				brand_name,
+			</if>
+			<if test="spu_keyword != null">
+				spu_keyword,
+			</if>
+			<if test="first_category != null">
+				first_category,
+			</if>
+			<if test="second_category != null">
+				second_category,
+			</if>
+			<if test="third_category != null">
+				third_category,
+			</if>
+			<if test="first_category_name != null">
+				first_category_name,
+			</if>
+			<if test="second_category_name != null">
+				second_category_name,
+			</if>
+			<if test="third_category_name != null">
+				third_category_name,
+			</if>
+			<if test="image != null">
+				image,
+			</if>
+			<if test="video_url != null">
+				video_url,
+			</if>
+			<if test="video_image != null">
+				video_image,
+			</if>
+			<if test="tag != null">
+				tag,
+			</if>
+			<if test="statement != null">
+				statement,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="images != null">
+				images,
+			</if>
+			<if test="maintain_status != null">
+				maintain_status,
+			</if>
+			<if test="valid_duration != null">
+				valid_duration,
+			</if>
+			<if test="spu_subheading != null">
+				spu_subheading,
+			</if>
+			<if test="banner_image != null">
+				banner_image,
+			</if>
+			<if test="is_banner != null">
+				is_banner,
+			</if>
+			<if test="is_top != null">
+				is_top,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="supply_price != null">
+				supply_price,
+			</if>
+			<if test="group_price_three != null">
+				group_price_three,
+			</if>
+			<if test="group_price_five != null">
+				group_price_five,
+			</if>
+			<if test="group_price_eight != null">
+				group_price_eight,
+			</if>
+			<if test="commission_price_three != null">
+				commission_price_three,
+			</if>
+			<if test="commission_price_five != null">
+				commission_price_five,
+			</if>
+			<if test="commission_price_eight != null">
+				commission_price_eight,
+			</if>
+			<if test="refund_price != null">
+				refund_price,
+			</if>
+			<if test="market_price != null">
+				market_price,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="commission != null">
+				commission,
+			</if>
+			<if test="reduce != null">
+				reduce,
+			</if>
+			<if test="sale_amount != null">
+				sale_amount,
+			</if>
+			<if test="on_sale != null">
+				on_sale,
+			</if>
+			<if test="service_price != null">
+				service_price,
+			</if>
+			<if test="three_difference_price != null">
+				three_difference_price,
+			</if>
+			<if test="five_difference_price != null">
+				five_difference_price,
+			</if>
+			<if test="eight_difference_price != null">
+				eight_difference_price,
+			</if>
+			<if test="sub_dis_fee != null">
+				sub_dis_fee,
+			</if>
+			<if test="sub_dis_value != null">
+				sub_dis_value,
+			</if>
+			<if test="maintain_start_time != null">
+				maintain_start_time,
+			</if>
+			<if test="maintain_end_time != null">
+				maintain_end_time,
+			</if>
+			<if test="interval_value != null">
+				interval_value,
+			</if>
+			<if test="success_image != null">
+				success_image,
+			</if>
+			<if test="success_gif_image != null">
+				success_gif_image,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="spuid != null">
+				#{spuid,jdbcType=VARCHAR},
+			</if>
+			<if test="spu_name != null">
+				#{spu_name,jdbcType=VARCHAR},
+			</if>
+			<if test="spu_spec != null">
+				#{spu_spec,jdbcType=VARCHAR},
+			</if>
+			<if test="catagory_id != null">
+				#{catagory_id,jdbcType=INTEGER},
+			</if>
+			<if test="s_id != null">
+				#{s_id,jdbcType=INTEGER},
+			</if>
+			<if test="brand_name != null">
+				#{brand_name,jdbcType=VARCHAR},
+			</if>
+			<if test="spu_keyword != null">
+				#{spu_keyword,jdbcType=VARCHAR},
+			</if>
+			<if test="first_category != null">
+				#{first_category,jdbcType=INTEGER},
+			</if>
+			<if test="second_category != null">
+				#{second_category,jdbcType=INTEGER},
+			</if>
+			<if test="third_category != null">
+				#{third_category,jdbcType=INTEGER},
+			</if>
+			<if test="first_category_name != null">
+				#{first_category_name,jdbcType=VARCHAR},
+			</if>
+			<if test="second_category_name != null">
+				#{second_category_name,jdbcType=VARCHAR},
+			</if>
+			<if test="third_category_name != null">
+				#{third_category_name,jdbcType=VARCHAR},
+			</if>
+			<if test="image != null">
+				#{image,jdbcType=VARCHAR},
+			</if>
+			<if test="video_url != null">
+				#{video_url,jdbcType=VARCHAR},
+			</if>
+			<if test="video_image != null">
+				#{video_image,jdbcType=VARCHAR},
+			</if>
+			<if test="tag != null">
+				#{tag,jdbcType=VARCHAR},
+			</if>
+			<if test="statement != null">
+				#{statement,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="images != null">
+				#{images,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="maintain_status != null">
+				#{maintain_status,jdbcType=INTEGER},
+			</if>
+			<if test="valid_duration != null">
+				#{valid_duration,jdbcType=DECIMAL},
+			</if>
+			<if test="spu_subheading != null">
+				#{spu_subheading,jdbcType=VARCHAR},
+			</if>
+			<if test="banner_image != null">
+				#{banner_image,jdbcType=VARCHAR},
+			</if>
+			<if test="is_banner != null">
+				#{is_banner,jdbcType=INTEGER},
+			</if>
+			<if test="is_top != null">
+				#{is_top,jdbcType=INTEGER},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="supply_price != null">
+				#{supply_price,jdbcType=DECIMAL},
+			</if>
+			<if test="group_price_three != null">
+				#{group_price_three,jdbcType=DECIMAL},
+			</if>
+			<if test="group_price_five != null">
+				#{group_price_five,jdbcType=DECIMAL},
+			</if>
+			<if test="group_price_eight != null">
+				#{group_price_eight,jdbcType=DECIMAL},
+			</if>
+			<if test="commission_price_three != null">
+				#{commission_price_three,jdbcType=DECIMAL},
+			</if>
+			<if test="commission_price_five != null">
+				#{commission_price_five,jdbcType=DECIMAL},
+			</if>
+			<if test="commission_price_eight != null">
+				#{commission_price_eight,jdbcType=DECIMAL},
+			</if>
+			<if test="refund_price != null">
+				#{refund_price,jdbcType=DECIMAL},
+			</if>
+			<if test="market_price != null">
+				#{market_price,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="commission != null">
+				#{commission,jdbcType=DECIMAL},
+			</if>
+			<if test="reduce != null">
+				#{reduce,jdbcType=DECIMAL},
+			</if>
+			<if test="sale_amount != null">
+				#{sale_amount,jdbcType=INTEGER},
+			</if>
+			<if test="on_sale != null">
+				#{on_sale,jdbcType=INTEGER},
+			</if>
+			<if test="service_price != null">
+				#{service_price,jdbcType=DECIMAL},
+			</if>
+			<if test="three_difference_price != null">
+				#{three_difference_price,jdbcType=DECIMAL},
+			</if>
+			<if test="five_difference_price != null">
+				#{five_difference_price,jdbcType=DECIMAL},
+			</if>
+			<if test="eight_difference_price != null">
+				#{eight_difference_price,jdbcType=DECIMAL},
+			</if>
+			<if test="sub_dis_fee != null">
+				#{sub_dis_fee,jdbcType=DECIMAL},
+			</if>
+			<if test="sub_dis_value != null">
+				#{sub_dis_value,jdbcType=INTEGER},
+			</if>
+			<if test="maintain_start_time != null">
+				#{maintain_start_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="maintain_end_time != null">
+				#{maintain_end_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="interval_value != null">
+				#{interval_value,jdbcType=VARCHAR},
+			</if>
+			<if test="success_image != null">
+				#{success_image,jdbcType=VARCHAR},
+			</if>
+			<if test="success_gif_image != null">
+				#{success_gif_image,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<update id="editOnSale" parameterType="com.data.display.model.commodity.SpuCommodity">
+		update ym_pro_spu
+		<set>
+			<if test="on_sale != null">
+				on_sale = #{on_sale,jdbcType=INTEGER},
+			</if>
+			<if test="maintain_status != null">
+				maintain_status = #{maintain_status,jdbcType=INTEGER},
+			</if>
+			<if test="maintain_start_time != null">
+				maintain_start_time = #{maintain_start_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="maintain_end_time != null">
+				maintain_end_time = #{maintain_end_time,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	
+	<update id="updateByPrimaryKeySelective" parameterType="com.data.display.model.commodity.SpuCommodity">
+		update ym_pro_spu
+		<set>
+			<if test="spuid != null">
+				spuid = #{spuid,jdbcType=VARCHAR},
+			</if>
+			<if test="spu_name != null">
+				spu_name = #{spu_name,jdbcType=VARCHAR},
+			</if>
+			<if test="spu_spec != null">
+				spu_spec = #{spu_spec,jdbcType=VARCHAR},
+			</if>
+			<if test="catagory_id != null">
+				catagory_id = #{catagory_id,jdbcType=INTEGER},
+			</if>
+			<if test="s_id != null">
+				s_id = #{s_id,jdbcType=INTEGER},
+			</if>
+			<if test="brand_name != null">
+				brand_name = #{brand_name,jdbcType=VARCHAR},
+			</if>
+			<if test="spu_keyword != null">
+				spu_keyword = #{spu_keyword,jdbcType=VARCHAR},
+			</if>
+			<if test="first_category != null">
+				first_category = #{first_category,jdbcType=INTEGER},
+			</if>
+			<if test="second_category != null">
+				second_category = #{second_category,jdbcType=INTEGER},
+			</if>
+			<if test="third_category != null">
+				third_category = #{third_category,jdbcType=INTEGER},
+			</if>
+			<if test="first_category_name != null">
+				first_category_name = #{first_category_name,jdbcType=VARCHAR},
+			</if>
+			<if test="second_category_name != null">
+				second_category_name = #{second_category_name,jdbcType=VARCHAR},
+			</if>
+			<if test="third_category_name != null">
+				third_category_name = #{third_category_name,jdbcType=VARCHAR},
+			</if>
+			<if test="image != null">
+				image = #{image,jdbcType=VARCHAR},
+			</if>
+			<if test="video_url != null">
+				video_url = #{video_url,jdbcType=VARCHAR},
+			</if>
+			<if test="video_image != null">
+				video_image = #{video_image,jdbcType=VARCHAR},
+			</if>
+			<if test="tag != null">
+				tag = #{tag,jdbcType=VARCHAR},
+			</if>
+			<if test="statement != null">
+				statement = #{statement,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null">
+				create_time = #{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="images != null">
+				images = #{images,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="maintain_status != null">
+				maintain_status = #{maintain_status,jdbcType=INTEGER},
+			</if>
+			<if test="valid_duration != null">
+				valid_duration = #{valid_duration,jdbcType=DECIMAL},
+			</if>
+			<if test="spu_subheading != null">
+				spu_subheading = #{spu_subheading,jdbcType=VARCHAR},
+			</if>
+			<if test="banner_image != null">
+				banner_image = #{banner_image,jdbcType=VARCHAR},
+			</if>
+			<if test="is_banner != null">
+				is_banner = #{is_banner,jdbcType=INTEGER},
+			</if>
+			<if test="is_top != null">
+				is_top = #{is_top,jdbcType=INTEGER},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="supply_price != null">
+				supply_price = #{supply_price,jdbcType=DECIMAL},
+			</if>
+			<if test="group_price_three != null">
+				group_price_three = #{group_price_three,jdbcType=DECIMAL},
+			</if>
+			<if test="group_price_five != null">
+				group_price_five = #{group_price_five,jdbcType=DECIMAL},
+			</if>
+			<if test="group_price_eight != null">
+				group_price_eight = #{group_price_eight,jdbcType=DECIMAL},
+			</if>
+			<if test="commission_price_three != null">
+				commission_price_three = #{commission_price_three,jdbcType=DECIMAL},
+			</if>
+			<if test="commission_price_five != null">
+				commission_price_five = #{commission_price_five,jdbcType=DECIMAL},
+			</if>
+			<if test="commission_price_eight != null">
+				commission_price_eight = #{commission_price_eight,jdbcType=DECIMAL},
+			</if>
+			<if test="refund_price != null">
+				refund_price = #{refund_price,jdbcType=DECIMAL},
+			</if>
+			<if test="market_price != null">
+				market_price = #{market_price,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="commission != null">
+				commission = #{commission,jdbcType=DECIMAL},
+			</if>
+			<if test="reduce != null">
+				reduce = #{reduce,jdbcType=DECIMAL},
+			</if>
+			<if test="sale_amount != null">
+				sale_amount = #{sale_amount,jdbcType=INTEGER},
+			</if>
+			<if test="on_sale != null">
+				on_sale = #{on_sale,jdbcType=INTEGER},
+			</if>
+			<if test="service_price != null">
+				service_price = #{service_price,jdbcType=DECIMAL},
+			</if>
+			<if test="three_difference_price != null">
+				three_difference_price = #{three_difference_price,jdbcType=DECIMAL},
+			</if>
+			<if test="five_difference_price != null">
+				five_difference_price = #{five_difference_price,jdbcType=DECIMAL},
+			</if>
+			<if test="eight_difference_price != null">
+				eight_difference_price = #{eight_difference_price,jdbcType=DECIMAL},
+			</if>
+			<if test="sub_dis_fee != null">
+				sub_dis_fee = #{sub_dis_fee,jdbcType=DECIMAL},
+			</if>
+			<if test="sub_dis_value != null">
+				sub_dis_value = #{sub_dis_value,jdbcType=INTEGER},
+			</if>
+			<if test="maintain_start_time != null">
+				maintain_start_time = #{maintain_start_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="maintain_end_time != null">
+				maintain_end_time = #{maintain_end_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="interval_value != null">
+				interval_value = #{interval_value,jdbcType=VARCHAR},
+			</if>
+			<if test="success_image != null">
+				success_image = #{success_image,jdbcType=VARCHAR},
+			</if>
+			<if test="success_gif_image != null">
+				success_gif_image = #{success_gif_image,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

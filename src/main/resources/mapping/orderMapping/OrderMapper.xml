@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.OrderMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.order.Order">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="if_primary" property="if_primary" jdbcType="TINYINT" />
+		<result column="sub_order_no" property="sub_order_no" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="share_user_id" property="share_user_id" jdbcType="INTEGER" />
+		<result column="originator_id" property="originator_id" jdbcType="INTEGER" />
+		<result column="supplier_id" property="supplier_id" jdbcType="INTEGER" />
+		<result column="dis_fee" property="dis_fee" jdbcType="DECIMAL" />
+		<result column="pay_type" property="pay_type" jdbcType="VARCHAR" />
+		<result column="group_type" property="group_type" jdbcType="INTEGER" />
+		<result column="group_num" property="group_num" jdbcType="VARCHAR" />
+		<result column="group_source" property="group_source" jdbcType="INTEGER" />
+		<result column="c_amount" property="c_amount" jdbcType="DECIMAL" />
+		<result column="commission" property="commission" jdbcType="DECIMAL" />
+		<result column="address_id" property="address_id" jdbcType="INTEGER" />
+		<result column="addr_region" property="addr_region" jdbcType="INTEGER" />
+		<result column="addr_detail" property="addr_detail" jdbcType="VARCHAR" />
+		<result column="addr_name" property="addr_name" jdbcType="VARCHAR" />
+		<result column="addr_mobile" property="addr_mobile" jdbcType="VARCHAR" />
+		<result column="trans_com" property="trans_com" jdbcType="VARCHAR" />
+		<result column="trans_id" property="trans_id" jdbcType="VARCHAR" />
+		<result column="trans_fin" property="trans_fin" jdbcType="INTEGER" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="if_refund" property="if_refund" jdbcType="VARCHAR" />
+		<result column="after_sale_status" property="after_sale_status" jdbcType="VARCHAR" />
+		<result column="auditor" property="auditor" jdbcType="INTEGER" />
+		<result column="to_examine_status" property="to_examine_status" jdbcType="VARCHAR" />
+		<result column="order_status" property="order_status" jdbcType="VARCHAR" />
+		<result column="pay_status" property="pay_status" jdbcType="TINYINT" />
+		<result column="settle_status" property="settle_status" jdbcType="TINYINT" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="pay_time" property="pay_time" jdbcType="TIMESTAMP" />
+		<result column="send_time" property="send_time" jdbcType="TIMESTAMP" />
+		<result column="trans_time" property="trans_time" jdbcType="BIGINT" />
+		<result column="ywc_time" property="ywc_time" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+		<result column="if_self" property="if_self" jdbcType="INTEGER" />
+		<result column="order_close_status" property="order_close_status" jdbcType="VARCHAR" />
+		<result column="partener_id" property="partener_id" jdbcType="INTEGER" />
+		<result column="stockerholder_id" property="stockerholder_id" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, order_no, if_primary, sub_order_no, user_id, share_user_id,
+		originator_id, supplier_id,
+		dis_fee, pay_type, group_type, group_num, group_source, c_amount, commission,
+		address_id,
+		addr_region, addr_detail, addr_name, addr_mobile, trans_com, trans_id, trans_fin,
+		remark, if_refund, after_sale_status, auditor, to_examine_status,
+		order_status, pay_status,
+		settle_status, create_time, pay_time, send_time, trans_time, ywc_time, update_time,if_self,
+		order_close_status,partener_id,stockerholder_id
+	</sql>
+
+	<sql id="Base_Column_List2">
+		a.id,
+		a.order_no,
+		a.if_primary,
+		a.sub_order_no,
+		a.user_id,
+		a.share_user_id,
+		a.originator_id,
+		a.supplier_id,
+		a.dis_fee,
+		a.pay_type,
+		a.group_type,
+		a.group_num,
+		a.group_source,
+		a.c_amount,
+		a.commission,
+		a.address_id,
+		a.addr_region,
+		a.addr_detail,
+		a.addr_name,
+		a.addr_mobile,
+		a.trans_com,
+		a.trans_id,
+		a.trans_fin,
+		a.remark,
+		a.if_refund,
+		a.after_sale_status,
+		a.auditor,
+		a.to_examine_status,
+		a.order_status,
+		a.pay_status,
+		a.settle_status,
+		a.create_time,
+		a.pay_time,
+		a.send_time,
+		a.trans_time,
+		a.ywc_time,
+		a.update_time,
+		a.if_self,
+		a.order_close_status,
+		a.partener_id,
+		a.stockerholder_id,
+		b.num
+	</sql>
+
+	<select id="getList" resultMap="BaseResultMap">
+		SELECT
+			*
+		FROM ym_order
+		WHERE order_status = 'dfh'
+		AND trans_id is not null
+		AND send_time is not NULL
+		AND to_examine_status = 0
+	</select>
+
+
+	<!-- 列表 -->
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Order">
+		select
+		<include refid="Base_Column_List2" />
+		from ym_order a
+		LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+		where 1=1
+		<if test="id != null">
+			and a.id = #{id}
+		</if>
+		<if test="order_status != null and order_status != ''">
+			and a.order_status = #{order_status}
+		</if>
+		<if test="supplier_id != null">
+			and a.supplier_id = #{supplier_id}
+		</if>
+		<if test="order_no != null and order_no != ''">
+			and a.order_no = #{order_no}
+		</if>
+		<if test="sub_order_no != null and sub_order_no != ''">
+			and a.sub_order_no = #{sub_order_no}
+		</if>
+		<if test="user_id != null and user_id != ''">
+			and a.user_id = #{user_id}
+		</if>
+		<if test="addr_name != null and addr_name != ''">
+			and a.addr_name = #{addr_name}
+		</if>
+		<if test="addr_mobile != null and addr_mobile != ''">
+			and a.addr_mobile = #{addr_mobile}
+		</if>
+		<if test="trans_id != null and trans_id != ''">
+			and a.trans_id = #{trans_id}
+		</if>
+		<if test="if_primary != null">
+			and a.if_primary = #{if_primary}
+		</if>
+		<if test="if_refund != null">
+			and a.if_refund = #{if_refund}
+		</if>
+		<if test="after_sale_status != null">
+			and a.after_sale_status = #{after_sale_status}
+		</if>
+		<if test="smallNum != null">
+			and b.num &gt;= #{smallNum}
+		</if>
+		<if test="bigNum != null">
+			and b.num &lt;= #{bigNum}
+		</if>
+		order by a.create_time desc
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="getOtherData" resultType="java.util.HashMap" parameterType="java.lang.String">
+		SELECT
+			a.id,a.order_no,d.s_name,a.sub_order_no,a.user_id,a.supplier_id,a.pay_type,a.c_amount,a.addr_name,a.trans_id,
+			a.addr_mobile,a.addr_detail,a.order_status,a.pay_time,a.create_time,b.num,b.price,b.skuid,b.sku_name,b.supply_price,b.subtotal,
+			c.ec_code,c.nu,c.details,c.state
+		FROM
+			ym_order a
+		LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+		LEFT JOIN ym_delivery c ON a.trans_id = c.nu
+		LEFT JOIN ym_supplier_info d ON a.supplier_id = d.s_id
+		WHERE
+			a.id = #{id}
+	</select>
+
+	<select id="exportPrem" resultType="java.util.HashMap">
+		SELECT
+		a.addr_name,
+		a.addr_mobile,
+		a.address_id,
+		a.addr_detail,
+		'洗衣片' AS type,
+		a.order_no,
+		a.create_time,
+		b.num AS num
+		FROM
+		ym_order a
+		LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+		WHERE
+		a.if_primary = 0
+		<if test="s_id != null">
+			<if test="s_id != 1">
+				and a.supplier_id = #{s_id,jdbcType=INTEGER}
+			</if>
+		</if>
+		and a.order_status = 'dfh'
+		and a.after_sale_status != 'tzclz'
+		and a.after_sale_status != 'kfclz'
+		and a.after_sale_status != 'cwclz'
+		AND a.after_sale_status != 'cwytg'
+		AND b.spuid = #{spuid}
+		GROUP BY
+		a.sub_order_no
+	</select>
+
+	<!-- 获取当日已支付订单 -->
+	<select id="selectPaymented" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order
+		where
+		if_primary = 0 and pay_status = 1
+		<if test="type == 1">
+			<if test="payTime != null">
+				and DATE_FORMAT(pay_time,'%Y-%m-%d') = #{payTime}
+			</if>
+		</if>
+		<if test="type == 2">
+			<if test="payTime != null">
+				and DATE_FORMAT(pay_time,'%Y-%m-%d') &lt;= #{payTime}
+			</if>
+		</if>
+		group by user_id
+	</select>
+
+	<select id="getRefundData" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+            <include refid="Base_Column_List2" />
+		FROM
+			ym_order a
+		LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+		LEFT JOIN ym_product c ON b.skuid = c.skuid
+		WHERE a.if_primary = 0
+			and a.to_examine_status = 'ytk'
+			AND a.partener_id = #{parId}
+			AND c.spuid = #{spuid}
+			<if test="beginDate != null and beginDate != ''">
+				and b.check_time &gt;= #{beginDate}
+			</if>
+			<if test="endDate != null and endDate != ''">
+				and b.check_time &lt;= #{endDate}
+			</if>
+	</select>
+
+
+	<select id="getCountData" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+          <include refid="Base_Column_List2" />
+        FROM
+          ym_order a
+		LEFT JOIN ym_order_detail b ON a.order_no = b.order_no
+		LEFT JOIN ym_product c ON b.skuid = c.skuid
+        WHERE a.partener_id = #{parId} AND a.if_primary = 0 AND a.pay_status = 1 AND c.spuid = #{spuid}
+		<if test="beginDate != null and beginDate != ''">
+			and a.create_time &gt;= #{beginDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			and a.create_time &lt;= #{endDate}
+		</if>
+	</select>
+
+
+	<!-- 获取合伙人/股东上月订单总盒数 -->
+	<select id="getLastMonthData" resultType="java.lang.Integer" parameterType="java.lang.String">
+		SELECT COALESCE(SUM(num),0) as num FROM ym_order_detail where order_no IN(
+			SELECT order_no FROM ym_order WHERE if_primary = 0 AND DATE_FORMAT(create_time,'%Y-%m') = #{time} AND pay_status = 1
+			<if test="parId != null and parId != ''">
+				AND partener_id = #{parId}
+			</if>
+			<if test="stocId != null and stocId != ''">
+				AND stockerholder_id = #{stocId}
+			</if>
+		)
+	</select>
+
+
+
+	<select id="getOrderByAfterStatus" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Order">
+		select
+		a.*,b.apply_time
+		from ym_order a
+		LEFT JOIN ym_order_detail b on a.order_no = b.order_no
+		where a.after_sale_status != '0'
+				 and a.after_sale_status != ''
+				 and a.if_primary = 0
+		<if test="order_status != null and order_status != ''">
+			and a.order_status = #{order_status}
+		</if>
+		<if test="order_no != null and order_no != ''">
+			and a.order_no = #{order_no}
+		</if>
+		<if test="sub_order_no != null and sub_order_no != ''">
+			and a.sub_order_no = #{sub_order_no}
+		</if>
+		<if test="user_id != null and user_id != ''">
+			and a.user_id = #{user_id}
+		</if>
+		<if test="addr_name != null and addr_name != ''">
+			and a.addr_name = #{addr_name}
+		</if>
+		<if test="addr_mobile != null and addr_mobile != ''">
+			and a.addr_mobile = #{addr_mobile}
+		</if>
+		<if test="trans_id != null and trans_id != ''">
+			and a.trans_id = #{trans_id}
+		</if>
+		<if test="after_sale_status != null and after_sale_status != ''">
+			and a.after_sale_status = #{after_sale_status}
+		</if>
+		order by b.kefu_time asc
+	</select>
+	
+	<select id="getOrderByAfterStatus2" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Order">
+		select
+		a.*,b.kefu_time,b.apply_time
+		from ym_order a
+		LEFT JOIN ym_order_detail b on a.order_no = b.order_no
+		where a.after_sale_status NOT IN('tzclz','tzwtg','kfclz','kfwtg')
+				 and a.after_sale_status != '0'
+				 and a.after_sale_status != ''
+				 and a.if_primary = 0
+		<if test="order_status != null and order_status != ''">
+			and a.order_status = #{order_status}
+		</if>
+		<if test="order_no != null and order_no != ''">
+			and a.order_no = #{order_no}
+		</if>
+		<if test="sub_order_no != null and sub_order_no != ''">
+			and a.sub_order_no = #{sub_order_no}
+		</if>
+		<if test="user_id != null and user_id != ''">
+			and a.user_id = #{user_id}
+		</if>
+		<if test="addr_name != null and addr_name != ''">
+			and a.addr_name = #{addr_name}
+		</if>
+		<if test="addr_mobile != null and addr_mobile != ''">
+			and a.addr_mobile = #{addr_mobile}
+		</if>
+		<if test="trans_id != null and trans_id != ''">
+			and a.trans_id = #{trans_id}
+		</if>
+		<if test="after_sale_status != null and after_sale_status != ''">
+			and a.after_sale_status = #{after_sale_status}
+		</if>
+		order by b.kefu_time desc
+	</select>
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order where id = #{id}
+	</select>
+	
+	<select id="selectByOthers" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Order">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order where 1=1
+		<if test="order_no != null">
+			and order_no = #{order_no}
+		</if>
+		<if test="if_primary != null">
+			and if_primary = #{if_primary}
+		</if>
+		<if test="order_status != null">
+			and order_status = #{order_status}
+		</if>
+		<if test="pay_status != null">
+			and pay_status = #{pay_status}
+		</if>
+		<if test="if_self != null">
+			and if_self = #{if_self}
+		</if>
+		<if test="group_num != null">
+			and group_num = #{group_num}
+		</if>
+		<if test="startTime != null">
+			and send_time &gt;= #{startTime}
+		</if>
+		<if test="endTime != null">
+			and send_time &lt;= #{endTime}
+		</if>
+	</select>
+
+	<select id="selectByOthers2" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Order">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order where 1=1
+		<if test="order_status != null">
+			and order_status = #{order_status}
+		</if>
+		<if test="group_num != null">
+			and group_num = #{group_num}
+		</if>
+		<if test="startTime != null">
+			and create_time &lt;= #{startTime}
+		</if>
+	</select>
+
+	<select id="selectByOthers3" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Order">
+		select
+		<include refid="Base_Column_List" />
+		from ym_order where 1=1
+		<if test="order_no != null">
+			and order_no = #{order_no}
+		</if>
+		<if test="if_primary != null">
+			and if_primary = #{if_primary}
+		</if>
+		<if test="order_status != null">
+			and order_status = #{order_status}
+		</if>
+		<if test="pay_status != null">
+			and pay_status = #{pay_status}
+		</if>
+		<if test="if_self != null">
+			and if_self = #{if_self}
+		</if>
+		<if test="group_num != null">
+			and group_num = #{group_num}
+		</if>
+		<if test="startTime != null">
+			and ywc_time &gt;= #{startTime}
+		</if>
+		<if test="endTime != null">
+			and ywc_time &lt;= #{endTime}
+		</if>
+	</select>
+
+	<select id="exportRefund" resultType="java.util.HashMap" parameterType="com.data.display.model.order.Order">
+		select
+			order_no,
+			sub_order_no,
+			user_id,
+			c_amount+dis_fee as 'amount'
+		from ym_order where if_primary = 0 AND after_sale_status IN('tzclz','tzwtg','kfclz') AND if_refund = 0 AND to_examine_status != 'ytk'
+	</select>
+	<!-- 删除 -->
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from ym_order
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	
+	
+	<!-- 添加 -->
+	<insert id="insert" parameterType="com.data.display.model.order.Order">
+		insert into ym_order (id, order_no, if_primary,
+		sub_order_no, user_id, share_user_id,
+		originator_id, supplier_id, dis_fee,
+		pay_type, group_type, group_num,
+		group_source, c_amount, commission,
+		address_id, addr_region, addr_detail,
+		addr_name, addr_mobile, trans_com,
+		trans_id, trans_fin, remark,
+		if_refund, after_sale_status, auditor,
+		to_examine_status, order_status, pay_status,
+		settle_status, create_time, pay_time,
+		send_time, trans_time, ywc_time,
+		update_time)
+		values (#{id,jdbcType=BIGINT}, #{order_no,jdbcType=VARCHAR},
+		#{if_primary,jdbcType=TINYINT},
+		#{sub_order_no,jdbcType=VARCHAR}, #{user_id,jdbcType=INTEGER}, #{share_user_id,jdbcType=INTEGER},
+		#{originator_id,jdbcType=INTEGER}, #{supplier_id,jdbcType=INTEGER},
+		#{dis_fee,jdbcType=DECIMAL},
+		#{pay_type,jdbcType=VARCHAR}, #{group_type,jdbcType=INTEGER}, #{group_num,jdbcType=VARCHAR},
+		#{group_source,jdbcType=INTEGER}, #{c_amount,jdbcType=DECIMAL},
+		#{commission,jdbcType=DECIMAL},
+		#{address_id,jdbcType=INTEGER}, #{addr_region,jdbcType=INTEGER}, #{addr_detail,jdbcType=VARCHAR},
+		#{addr_name,jdbcType=VARCHAR}, #{addr_mobile,jdbcType=VARCHAR},
+		#{trans_com,jdbcType=VARCHAR},
+		#{trans_id,jdbcType=VARCHAR}, #{trans_fin,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR},
+		#{if_refund,jdbcType=VARCHAR}, #{after_sale_status,jdbcType=VARCHAR},
+		#{auditor,jdbcType=INTEGER},
+		#{to_examine_status,jdbcType=VARCHAR}, #{order_status,jdbcType=VARCHAR}, #{pay_status,jdbcType=TINYINT},
+		#{settle_status,jdbcType=TINYINT}, #{create_time,jdbcType=TIMESTAMP},
+		#{pay_time,jdbcType=TIMESTAMP},
+		#{send_time,jdbcType=TIMESTAMP}, #{trans_time,jdbcType=BIGINT}, #{ywc_time,jdbcType=TIMESTAMP},
+		#{update_time,jdbcType=TIMESTAMP})
+	</insert>
+	
+	<insert id="insertSelective" parameterType="com.data.display.model.order.Order">
+		insert into ym_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="order_no != null">
+				order_no,
+			</if>
+			<if test="if_primary != null">
+				if_primary,
+			</if>
+			<if test="sub_order_no != null">
+				sub_order_no,
+			</if>
+			<if test="user_id != null">
+				user_id,
+			</if>
+			<if test="share_user_id != null">
+				share_user_id,
+			</if>
+			<if test="originator_id != null">
+				originator_id,
+			</if>
+			<if test="supplier_id != null">
+				supplier_id,
+			</if>
+			<if test="dis_fee != null">
+				dis_fee,
+			</if>
+			<if test="pay_type != null">
+				pay_type,
+			</if>
+			<if test="group_type != null">
+				group_type,
+			</if>
+			<if test="group_num != null">
+				group_num,
+			</if>
+			<if test="group_source != null">
+				group_source,
+			</if>
+			<if test="c_amount != null">
+				c_amount,
+			</if>
+			<if test="commission != null">
+				commission,
+			</if>
+			<if test="address_id != null">
+				address_id,
+			</if>
+			<if test="addr_region != null">
+				addr_region,
+			</if>
+			<if test="addr_detail != null">
+				addr_detail,
+			</if>
+			<if test="addr_name != null">
+				addr_name,
+			</if>
+			<if test="addr_mobile != null">
+				addr_mobile,
+			</if>
+			<if test="trans_com != null">
+				trans_com,
+			</if>
+			<if test="trans_id != null">
+				trans_id,
+			</if>
+			<if test="trans_fin != null">
+				trans_fin,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="if_refund != null">
+				if_refund,
+			</if>
+			<if test="after_sale_status != null">
+				after_sale_status,
+			</if>
+			<if test="auditor != null">
+				auditor,
+			</if>
+			<if test="to_examine_status != null">
+				to_examine_status,
+			</if>
+			<if test="order_status != null">
+				order_status,
+			</if>
+			<if test="pay_status != null">
+				pay_status,
+			</if>
+			<if test="settle_status != null">
+				settle_status,
+			</if>
+			<if test="create_time != null">
+				create_time,
+			</if>
+			<if test="pay_time != null">
+				pay_time,
+			</if>
+			<if test="send_time != null">
+				send_time,
+			</if>
+			<if test="trans_time != null">
+				trans_time,
+			</if>
+			<if test="ywc_time != null">
+				ywc_time,
+			</if>
+			<if test="update_time != null">
+				update_time,
+			</if>
+			<if test="if_self != null">
+				if_self,
+			</if>
+			<if test="order_close_status != null">
+				order_close_status,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="order_no != null">
+				#{order_no,jdbcType=VARCHAR},
+			</if>
+			<if test="if_primary != null">
+				#{if_primary,jdbcType=TINYINT},
+			</if>
+			<if test="sub_order_no != null">
+				#{sub_order_no,jdbcType=VARCHAR},
+			</if>
+			<if test="user_id != null">
+				#{user_id,jdbcType=INTEGER},
+			</if>
+			<if test="share_user_id != null">
+				#{share_user_id,jdbcType=INTEGER},
+			</if>
+			<if test="originator_id != null">
+				#{originator_id,jdbcType=INTEGER},
+			</if>
+			<if test="supplier_id != null">
+				#{supplier_id,jdbcType=INTEGER},
+			</if>
+			<if test="dis_fee != null">
+				#{dis_fee,jdbcType=DECIMAL},
+			</if>
+			<if test="pay_type != null">
+				#{pay_type,jdbcType=VARCHAR},
+			</if>
+			<if test="group_type != null">
+				#{group_type,jdbcType=INTEGER},
+			</if>
+			<if test="group_num != null">
+				#{group_num,jdbcType=VARCHAR},
+			</if>
+			<if test="group_source != null">
+				#{group_source,jdbcType=INTEGER},
+			</if>
+			<if test="c_amount != null">
+				#{c_amount,jdbcType=DECIMAL},
+			</if>
+			<if test="commission != null">
+				#{commission,jdbcType=DECIMAL},
+			</if>
+			<if test="address_id != null">
+				#{address_id,jdbcType=INTEGER},
+			</if>
+			<if test="addr_region != null">
+				#{addr_region,jdbcType=INTEGER},
+			</if>
+			<if test="addr_detail != null">
+				#{addr_detail,jdbcType=VARCHAR},
+			</if>
+			<if test="addr_name != null">
+				#{addr_name,jdbcType=VARCHAR},
+			</if>
+			<if test="addr_mobile != null">
+				#{addr_mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="trans_com != null">
+				#{trans_com,jdbcType=VARCHAR},
+			</if>
+			<if test="trans_id != null">
+				#{trans_id,jdbcType=VARCHAR},
+			</if>
+			<if test="trans_fin != null">
+				#{trans_fin,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="if_refund != null">
+				#{if_refund,jdbcType=VARCHAR},
+			</if>
+			<if test="after_sale_status != null">
+				#{after_sale_status,jdbcType=VARCHAR},
+			</if>
+			<if test="auditor != null">
+				#{auditor,jdbcType=INTEGER},
+			</if>
+			<if test="to_examine_status != null">
+				#{to_examine_status,jdbcType=VARCHAR},
+			</if>
+			<if test="order_status != null">
+				#{order_status,jdbcType=VARCHAR},
+			</if>
+			<if test="pay_status != null">
+				#{pay_status,jdbcType=TINYINT},
+			</if>
+			<if test="settle_status != null">
+				#{settle_status,jdbcType=TINYINT},
+			</if>
+			<if test="create_time != null">
+				#{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pay_time != null">
+				#{pay_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="send_time != null">
+				#{send_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="trans_time != null">
+				#{trans_time,jdbcType=BIGINT},
+			</if>
+			<if test="ywc_time != null">
+				#{ywc_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="update_time != null">
+				#{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="if_self != null">
+				#{if_self,jdbcType=INTEGER},
+			</if>
+			<if test="order_close_status != null">
+				#{order_close_status,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<!-- 修改有值字段 -->
+	<update id="updateByPrimaryKeySelective" parameterType="com.data.display.model.order.Order">
+		update ym_order
+		<set>
+			<if test="order_no != null">
+				order_no = #{order_no,jdbcType=VARCHAR},
+			</if>
+			<if test="if_primary != null">
+				if_primary = #{if_primary,jdbcType=TINYINT},
+			</if>
+			<if test="sub_order_no != null">
+				sub_order_no = #{sub_order_no,jdbcType=VARCHAR},
+			</if>
+			<if test="user_id != null">
+				user_id = #{user_id,jdbcType=INTEGER},
+			</if>
+			<if test="share_user_id != null">
+				share_user_id = #{share_user_id,jdbcType=INTEGER},
+			</if>
+			<if test="originator_id != null">
+				originator_id = #{originator_id,jdbcType=INTEGER},
+			</if>
+			<if test="supplier_id != null">
+				supplier_id = #{supplier_id,jdbcType=INTEGER},
+			</if>
+			<if test="dis_fee != null">
+				dis_fee = #{dis_fee,jdbcType=DECIMAL},
+			</if>
+			<if test="pay_type != null">
+				pay_type = #{pay_type,jdbcType=VARCHAR},
+			</if>
+			<if test="group_type != null">
+				group_type = #{group_type,jdbcType=INTEGER},
+			</if>
+			<if test="group_num != null">
+				group_num = #{group_num,jdbcType=VARCHAR},
+			</if>
+			<if test="group_source != null">
+				group_source = #{group_source,jdbcType=INTEGER},
+			</if>
+			<if test="c_amount != null">
+				c_amount = #{c_amount,jdbcType=DECIMAL},
+			</if>
+			<if test="commission != null">
+				commission = #{commission,jdbcType=DECIMAL},
+			</if>
+			<if test="address_id != null">
+				address_id = #{address_id,jdbcType=INTEGER},
+			</if>
+			<if test="addr_region != null">
+				addr_region = #{addr_region,jdbcType=INTEGER},
+			</if>
+			<if test="addr_detail != null">
+				addr_detail = #{addr_detail,jdbcType=VARCHAR},
+			</if>
+			<if test="addr_name != null">
+				addr_name = #{addr_name,jdbcType=VARCHAR},
+			</if>
+			<if test="addr_mobile != null">
+				addr_mobile = #{addr_mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="trans_com != null">
+				trans_com = #{trans_com,jdbcType=VARCHAR},
+			</if>
+			<if test="trans_id != null">
+				trans_id = #{trans_id,jdbcType=VARCHAR},
+			</if>
+			<if test="trans_fin != null">
+				trans_fin = #{trans_fin,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="if_refund != null">
+				if_refund = #{if_refund,jdbcType=VARCHAR},
+			</if>
+			<if test="after_sale_status != null">
+				after_sale_status = #{after_sale_status,jdbcType=VARCHAR},
+			</if>
+			<if test="auditor != null">
+				auditor = #{auditor,jdbcType=INTEGER},
+			</if>
+			<if test="to_examine_status != null">
+				to_examine_status = #{to_examine_status,jdbcType=VARCHAR},
+			</if>
+			<if test="order_status != null">
+				order_status = #{order_status,jdbcType=VARCHAR},
+			</if>
+			<if test="pay_status != null">
+				pay_status = #{pay_status,jdbcType=TINYINT},
+			</if>
+			<if test="settle_status != null">
+				settle_status = #{settle_status,jdbcType=TINYINT},
+			</if>
+			<if test="create_time != null">
+				create_time = #{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pay_time != null">
+				pay_time = #{pay_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="send_time != null">
+				send_time = #{send_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="trans_time != null">
+				trans_time = #{trans_time,jdbcType=BIGINT},
+			</if>
+			<if test="ywc_time != null">
+				ywc_time = #{ywc_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="if_self != null">
+				if_self = #{if_self,jdbcType=INTEGER},
+			</if>
+			<if test="order_close_status != null">
+				order_close_status = #{order_close_status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+	<update id="updateByOrderNo" parameterType="com.data.display.model.order.Order">
+		update ym_order
+		<set>
+			<if test="order_no != null">
+				order_no = #{order_no,jdbcType=VARCHAR},
+			</if>
+			<if test="pay_type != null">
+				pay_type = #{pay_type,jdbcType=VARCHAR},
+			</if>
+			<if test="group_type != null">
+				group_type = #{group_type,jdbcType=INTEGER},
+			</if>
+			<if test="group_num != null">
+				group_num = #{group_num,jdbcType=VARCHAR},
+			</if>
+			<if test="group_source != null">
+				group_source = #{group_source,jdbcType=INTEGER},
+			</if>
+			<if test="trans_com != null">
+				trans_com = #{trans_com,jdbcType=VARCHAR},
+			</if>
+			<if test="trans_id != null">
+				trans_id = #{trans_id,jdbcType=VARCHAR},
+			</if>
+			<if test="trans_fin != null">
+				trans_fin = #{trans_fin,jdbcType=INTEGER},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="if_refund != null">
+				if_refund = #{if_refund,jdbcType=VARCHAR},
+			</if>
+			<if test="after_sale_status != null">
+				after_sale_status = #{after_sale_status,jdbcType=VARCHAR},
+			</if>
+			<if test="auditor != null">
+				auditor = #{auditor,jdbcType=INTEGER},
+			</if>
+			<if test="to_examine_status != null">
+				to_examine_status = #{to_examine_status,jdbcType=VARCHAR},
+			</if>
+			<if test="order_status != null">
+				order_status = #{order_status,jdbcType=VARCHAR},
+			</if>
+			<if test="pay_status != null">
+				pay_status = #{pay_status,jdbcType=TINYINT},
+			</if>
+			<if test="settle_status != null">
+				settle_status = #{settle_status,jdbcType=TINYINT},
+			</if>
+			<if test="create_time != null">
+				create_time = #{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pay_time != null">
+				pay_time = #{pay_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="send_time != null">
+				send_time = #{send_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="trans_time != null">
+				trans_time = #{trans_time,jdbcType=BIGINT},
+			</if>
+			<if test="ywc_time != null">
+				ywc_time = #{ywc_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="if_self != null">
+				if_self = #{if_self,jdbcType=INTEGER},
+			</if>
+			<if test="order_close_status != null">
+				order_close_status = #{order_close_status,jdbcType=VARCHAR},
+			</if>
+			<if test="addr_name != null and addr_name != ''">
+				addr_name = #{addr_name,jdbcType=VARCHAR},
+			</if>
+			<if test="addr_mobile != null and addr_mobile != ''">
+				addr_mobile = #{addr_mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="addr_detail != null and addr_detail != ''">
+				addr_detail = #{addr_detail,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where order_no = #{order_no,jdbcType=VARCHAR}
+	</update>
+
+
+	
+	<!-- 修改所有 -->
+	<update id="updateByPrimaryKey" parameterType="com.data.display.model.order.Order">
+		update ym_order
+		set order_no = #{order_no,jdbcType=VARCHAR},
+		if_primary = #{if_primary,jdbcType=TINYINT},
+		sub_order_no = #{sub_order_no,jdbcType=VARCHAR},
+		user_id = #{user_id,jdbcType=INTEGER},
+		share_user_id = #{share_user_id,jdbcType=INTEGER},
+		originator_id = #{originator_id,jdbcType=INTEGER},
+		supplier_id = #{supplier_id,jdbcType=INTEGER},
+		dis_fee = #{dis_fee,jdbcType=DECIMAL},
+		pay_type = #{pay_type,jdbcType=VARCHAR},
+		group_type = #{group_type,jdbcType=INTEGER},
+		group_num = #{group_num,jdbcType=VARCHAR},
+		group_source = #{group_source,jdbcType=INTEGER},
+		c_amount = #{c_amount,jdbcType=DECIMAL},
+		commission = #{commission,jdbcType=DECIMAL},
+		address_id = #{address_id,jdbcType=INTEGER},
+		addr_region = #{addr_region,jdbcType=INTEGER},
+		addr_detail = #{addr_detail,jdbcType=VARCHAR},
+		addr_name = #{addr_name,jdbcType=VARCHAR},
+		addr_mobile = #{addr_mobile,jdbcType=VARCHAR},
+		trans_com = #{trans_com,jdbcType=VARCHAR},
+		trans_id = #{trans_id,jdbcType=VARCHAR},
+		trans_fin = #{trans_fin,jdbcType=INTEGER},
+		remark = #{remark,jdbcType=VARCHAR},
+		if_refund = #{if_refund,jdbcType=VARCHAR},
+		after_sale_status = #{after_sale_status,jdbcType=VARCHAR},
+		auditor = #{auditor,jdbcType=INTEGER},
+		to_examine_status = #{to_examine_status,jdbcType=VARCHAR},
+		order_status = #{order_status,jdbcType=VARCHAR},
+		order_close_status = #{order_close_status,jdbcType=VARCHAR},
+		pay_status = #{pay_status,jdbcType=TINYINT},
+		settle_status = #{settle_status,jdbcType=TINYINT},
+		create_time = #{create_time,jdbcType=TIMESTAMP},
+		pay_time = #{pay_time,jdbcType=TIMESTAMP},
+		send_time = #{send_time,jdbcType=TIMESTAMP},
+		trans_time = #{trans_time,jdbcType=BIGINT},
+		ywc_time = #{ywc_time,jdbcType=TIMESTAMP},
+		update_time = #{update_time,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

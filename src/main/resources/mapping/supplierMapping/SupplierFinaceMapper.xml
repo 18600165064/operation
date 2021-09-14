@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.supplierMapper.SupplierFinaceMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.supplier.SupplierFinace">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="sid" property="sid" jdbcType="INTEGER" />
+		<result column="bond" property="bond" jdbcType="DECIMAL" />
+		<result column="income" property="income" jdbcType="DECIMAL" />
+		<result column="frozen" property="frozen" jdbcType="DECIMAL" />
+		<result column="can_withdraw" property="can_withdraw" jdbcType="DECIMAL" />
+		<result column="refund" property="refund" jdbcType="DECIMAL" />
+		<result column="already_withdraw" property="already_withdraw" jdbcType="DECIMAL" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, 
+		sid, 
+		bond, 
+		income, 
+		frozen, 
+		can_withdraw,
+		refund,
+		already_withdraw,
+		create_time
+	</sql>
+	
+	<sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{sid,jdbcType=INTEGER},
+    	#{bond,jdbcType=DECIMAL},
+    	#{income,jdbcType=DECIMAL},
+    	#{frozen,jdbcType=DECIMAL},
+    	#{can_withdraw,jdbcType=DECIMAL},
+    	#{refund,jdbcType=DECIMAL},
+    	#{already_withdraw,jdbcType=DECIMAL},
+    	#{create_time,jdbcType=TIMESTAMP}
+    </sql>
+	
+	
+	<!-- 列表 -->
+	<select id="getSupplierFinaceData" resultMap="BaseResultMap" parameterType="com.data.display.model.supplier.SupplierFinace">
+		select
+		<include refid="Base_Column_List" />
+		from ym_supplier_finace
+		where 1=1
+		<if test="sid != null">
+			<if test="sid != 1">
+				and sid = #{sid}
+			</if>
+		</if>
+	</select>
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_supplier_finace
+		where id = #{id}
+	</select>
+	
+	
+	<select id="selectByOthers" resultMap="BaseResultMap" parameterType="com.data.display.model.supplier.SupplierFinace">
+		select
+		<include refid="Base_Column_List" />
+		from ym_supplier_finace
+		where sid = #{sid}
+	</select>
+	
+	<insert id="addSupplierFinace" parameterType="com.data.display.model.supplier.SupplierFinace">
+		 INSERT INTO ym_supplier_finace (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  	</insert>
+  	
+  	
+  	<update id="updateSupplierBySid" parameterType="com.data.display.model.supplier.SupplierFinace">
+  		update ym_supplier_finace
+		<set>
+			<if test="bond != null">
+				bond = #{bond,jdbcType=DECIMAL},
+			</if>
+			<if test="income != null">
+				income = #{income,jdbcType=DECIMAL},
+			</if>
+			<if test="frozen != null">
+				frozen = #{frozen,jdbcType=DECIMAL},
+			</if>
+			<if test="can_withdraw != null">
+				can_withdraw = #{can_withdraw,jdbcType=DECIMAL},
+			</if>
+			<if test="refund != null">
+				refund = #{refund,jdbcType=DECIMAL},
+			</if>
+			<if test="already_withdraw != null">
+				already_withdraw = #{already_withdraw,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where sid = #{sid,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="updateSupplierById" parameterType="com.data.display.model.supplier.SupplierFinace">
+  		update ym_supplier_finace
+		<set>
+			<if test="bond != null">
+				bond = #{bond,jdbcType=DECIMAL},
+			</if>
+			<if test="income != null">
+				income = #{income,jdbcType=DECIMAL},
+			</if>
+			<if test="frozen != null">
+				frozen = #{frozen,jdbcType=DECIMAL},
+			</if>
+			<if test="can_withdraw != null">
+				can_withdraw = #{can_withdraw,jdbcType=DECIMAL},
+			</if>
+			<if test="refund != null">
+				refund = #{refund,jdbcType=DECIMAL},
+			</if>
+			<if test="already_withdraw != null">
+				already_withdraw = #{already_withdraw,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  	
+	
+</mapper>

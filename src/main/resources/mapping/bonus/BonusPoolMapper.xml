@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.bonusMapper.BonusPoolMapper" >
+    <resultMap id="BaseResultMap" type="com.data.display.model.bonus.BonusPool" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="spuid" jdbcType="VARCHAR" property="spuid" />
+        <result column="pool_type" jdbcType="INTEGER" property="pool_type" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="input_ratio" property="input_ratio" jdbcType="DECIMAL" />
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,
+        spuid,
+        pool_type,
+        amount,
+        input_ratio,
+        create_time
+    </sql>
+
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+	    #{spuid,jdbcType=VARCHAR},
+	    #{pool_type,jdbcType=INTEGER},
+	    #{amount,jdbcType=DECIMAL},
+	    #{input_ratio,jdbcType=DECIMAL},
+	    #{create_time,jdbcType=TIMESTAMP}
+    </sql>
+
+    <select id="getDataBySpuid" parameterType="com.data.display.model.bonus.BonusPool" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ym_bonus_pool
+        group by spuid
+    </select>
+
+
+    <select id="getData" parameterType="com.data.display.model.bonus.BonusPool" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List" />
+        from ym_bonus_pool
+        where
+          pool_type = #{pool_type}
+        and spuid = #{spuid}
+    </select>
+
+
+    <update id="updateBonusPool" parameterType="com.data.display.model.bonus.BonusPool" >
+        update ym_bonus_pool
+        <set>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

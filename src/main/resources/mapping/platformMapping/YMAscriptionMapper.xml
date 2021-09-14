@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.platformMapper.YMAscriptionMapper">
+    <resultMap id="BaseResultMap" type="com.data.display.model.platform.YMAscription">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="spuid" property="spuid" jdbcType="INTEGER" />
+        <result column="skuid" property="skuid" jdbcType="INTEGER" />
+        <result column="user_id" property="user_id" jdbcType="INTEGER" />
+        <result column="uperid" property="uperid" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List">
+		id,
+		spuid,
+		skuid,
+		user_id,
+		uperid,
+		status,
+		create_time,
+		update_time
+	</sql>
+
+    <select id="selectUser" resultMap="BaseResultMap">
+       select user_id from (
+              select t1.user_id,
+              if(find_in_set(uperid, @pids) > 0, @pids := concat(@pids, ',', user_id), 0) as ischild
+              from (
+                   select user_id,uperid from ym_ascription t where 1 = 1 order by uperid, user_id
+                  ) t1,
+                  (select @pids := #{user_id}) t2
+             ) t3 where ischild != 0;
+    </select>
+
+
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List" />
+        from ym_ascription where uperid in
+        <foreach collection="list" item="uperid" index="index" open="(" close=")" separator=",">
+            #{uperid}
+        </foreach>
+        and spuid = #{spuid}
+    </select>
+
+
+    <select id="selectByUserId2" parameterType="com.data.display.model.platform.YMAscription" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ym_ascription where user_id = #{user_id} and spuid = #{spuid}
+    </select>
+
+</mapper>

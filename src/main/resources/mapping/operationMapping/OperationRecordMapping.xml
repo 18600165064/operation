@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.operationMapper.OperationRecordMapper">
+    <resultMap id="roleMap" type="com.data.display.model.operation.OperationRecord">
+        <id property="id" column="id" jdbcType="INTEGER" />
+        <id property="uid" column="uid" jdbcType="INTEGER" />
+        <result property="request_url" column="request_url" jdbcType="VARCHAR" />
+        <result property="request_method" column="request_method" jdbcType="VARCHAR" />
+        <result property="request_parameter" column="request_parameter" jdbcType="VARCHAR" />
+        <result property="craete_time" column="craete_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+    	`id`,
+    	`uid`,
+    	`request_url`,
+    	`request_method`,
+    	`request_parameter`,
+    	`craete_time`
+    </sql>
+    
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{uid,jdbcType=INTEGER},
+    	#{request_url,jdbcType=VARCHAR},
+    	#{request_method,jdbcType=VARCHAR},
+    	#{request_parameter,jdbcType=VARCHAR},
+    	#{craete_time,jdbcType=TIMESTAMP}
+    </sql>
+    
+    <!-- 新增 -->
+    <insert id="addOperationRecord" parameterType="com.data.display.model.operation.OperationRecord">
+    	INSERT INTO ym_operation_record (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+    </insert>
+    
+    
+</mapper>

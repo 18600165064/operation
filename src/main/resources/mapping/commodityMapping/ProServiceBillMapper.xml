@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.ProServiceBillMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.commodity.ProServiceBill">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="type" property="type" jdbcType="INTEGER" />
+		<result column="amount" jdbcType="DECIMAL" property="amount" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,
+		create_time,
+		type,
+		amount,
+		status,
+		order_no,
+		user_id
+	</sql>
+
+	<sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{create_time,jdbcType=TIMESTAMP},
+    	#{type,jdbcType=INTEGER},
+    	#{amount,jdbcType=DECIMAL},
+    	#{status,jdbcType=INTEGER},
+    	#{order_no,jdbcType=VARCHAR},
+    	#{user_id,jdbcType=INTEGER}
+    </sql>
+
+
+	<select id="getProServiceBillData" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.ProServiceBill">
+		select
+			<include refid="Base_Column_List" />
+		from ym_pro_service_bill
+		where 1=1
+		<if test="order_no != null and order_no != ''">
+			and order_no = #{order_no}
+		</if>
+		<if test="user_id != null and user_id != ''">
+			and user_id = #{user_id}
+		</if>
+		GROUP BY order_no
+	</select>
+
+	<select id="getProServiceByOrderNo" resultMap="BaseResultMap" parameterType="com.data.display.model.commodity.ProServiceBill">
+		select
+		<include refid="Base_Column_List" />
+		from ym_pro_service_bill
+		where order_no = #{order_no}
+	</select>
+
+	<insert id="insertProServiceBill" parameterType="com.data.display.model.commodity.ProServiceBill">
+		INSERT INTO ym_pro_service_bill
+		(<include refid="Base_Column_List" />)
+		VALUES
+		(<include refid="Base_Insert_Values" />)
+	</insert>
+
+
+</mapper>

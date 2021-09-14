@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.RefundDetailsMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.order.RefundDetails">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="sub_order_no" property="sub_order_no" jdbcType="VARCHAR" />
+		<result column="order_money" property="order_money" jdbcType="DECIMAL" />
+		<result column="refund_money" property="refund_money" jdbcType="DECIMAL" />
+		<result column="if_refund" property="if_refund" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		order_no,
+		sub_order_no,
+		order_money,
+		refund_money,
+		if_refund,
+		create_time
+	</sql>
+	
+	<sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{order_no,jdbcType=VARCHAR},
+    	#{sub_order_no,jdbcType=VARCHAR},
+    	#{order_money,jdbcType=DECIMAL},
+    	#{refund_money,jdbcType=DECIMAL},
+    	#{if_refund,jdbcType=INTEGER},
+    	#{create_time,jdbcType=TIMESTAMP}
+    </sql>
+	
+	<!-- 列表 -->
+	<select id="getRefundDetailsData" resultMap="BaseResultMap" parameterType="com.data.display.model.order.RefundDetails">
+		select
+		<include refid="Base_Column_List" />
+		from ym_refund_details
+	</select>
+	
+	<insert id="addRefundDetails" parameterType="com.data.display.model.order.RefundDetails">
+		 INSERT INTO ym_refund_details (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  	</insert>
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_refund_details
+		where id = #{id}
+	</select>
+	
+</mapper>

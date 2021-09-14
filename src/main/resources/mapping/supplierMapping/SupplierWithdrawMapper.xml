@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.supplierMapper.SupplierWithdrawMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.supplier.SupplierWithdraw">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="s_id" property="s_id" jdbcType="INTEGER" />
+		<result column="back_user_id" property="back_user_id" jdbcType="INTEGER" />
+		<result column="public_or_private" property="public_or_private" jdbcType="INTEGER" />
+		<result column="s_name" property="s_name" jdbcType="VARCHAR" />
+		<result column="s_manager" property="s_manager" jdbcType="VARCHAR" />
+		<result column="office_phone" property="office_phone" jdbcType="VARCHAR" />
+		<result column="currency" property="currency" jdbcType="VARCHAR" />
+		<result column="bank_code" property="bank_code" jdbcType="VARCHAR" />
+		<result column="bank_name" property="bank_name" jdbcType="VARCHAR" />
+		<result column="bank_account_no" property="bank_account_no" jdbcType="VARCHAR" />
+		<result column="account_holder" property="account_holder" jdbcType="VARCHAR" />
+		<result column="batch_no" property="batch_no" jdbcType="VARCHAR" />
+		<result column="settle_amt_total" property="settle_amt_total" jdbcType="DECIMAL" />
+		<result column="confirm_amt_total" property="confirm_amt_total" jdbcType="DECIMAL" />
+		<result column="settle_status" property="settle_status" jdbcType="VARCHAR" />
+		<result column="settle_time" property="settle_time" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="total_product" property="total_product" jdbcType="DECIMAL" />
+		<result column="dis_fee_total" property="dis_fee_total" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, 
+		s_id,
+		back_user_id,
+		public_or_private,
+		s_name,
+		s_manager,
+		office_phone,
+		currency,
+		bank_code,
+		bank_name,
+		bank_account_no,
+		account_holder,
+		batch_no,
+		settle_amt_total,
+		confirm_amt_total,
+		settle_status,
+		settle_time,
+		create_time,
+		total_product,
+		dis_fee_total
+	</sql>
+	
+	<sql id="Base_Insert_Values">
+		#{id,jdbcType=INTEGER},
+		#{s_id,jdbcType=INTEGER},
+		#{back_user_id,jdbcType=INTEGER},
+		#{public_or_private,jdbcType=INTEGER},
+		#{s_name,jdbcType=VARCHAR},
+		#{s_manager,jdbcType=VARCHAR},
+		#{office_phone,jdbcType=VARCHAR},
+		#{currency,jdbcType=VARCHAR},
+		#{bank_code,jdbcType=VARCHAR},
+		#{bank_name,jdbcType=VARCHAR},
+		#{bank_account_no,jdbcType=VARCHAR},
+		#{account_holder,jdbcType=VARCHAR},
+		#{batch_no,jdbcType=VARCHAR},
+		#{settle_amt_total,jdbcType=DECIMAL},
+		#{confirm_amt_total,jdbcType=DECIMAL},
+		#{settle_status,jdbcType=VARCHAR},
+		#{settle_time,jdbcType=TIMESTAMP},
+		#{create_time,jdbcType=TIMESTAMP},
+		#{total_product,jdbcType=DECIMAL},
+		#{dis_fee_total,jdbcType=DECIMAL}
+	</sql>
+	
+	<!-- 列表 -->
+	<select id="getSupplierWithdrawData" resultMap="BaseResultMap" parameterType="com.data.display.model.supplier.SupplierWithdraw">
+		select
+		<include refid="Base_Column_List" />
+		from ym_supplier_withdraw
+		order  by create_time desc
+	</select>
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_supplier_withdraw
+		where id = #{id}
+	</select>
+	
+	<insert id="addSupplierWithdraw" parameterType="com.data.display.model.supplier.SupplierWithdraw">
+		 INSERT INTO ym_supplier_withdraw (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  	</insert>
+	
+	<update id="editSupplierWithdraw" parameterType="com.data.display.model.supplier.SupplierWithdraw">
+		update ym_supplier_withdraw
+		<set>
+			<if test="back_user_id != null">
+				back_user_id = #{back_user_id,jdbcType=INTEGER},
+			</if>
+			<if test="settle_status != null">
+				settle_status = #{settle_status,jdbcType=INTEGER},
+			</if>
+			<if test="settle_time != null">
+				settle_time = #{settle_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="confirm_amt_total != null">
+				confirm_amt_total = #{confirm_amt_total,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+  	</update>
+	
+</mapper>

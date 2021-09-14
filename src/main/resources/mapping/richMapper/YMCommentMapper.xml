@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.richMapper.YMCommentMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.rich.YMComment">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="nick_name" property="nick_name" jdbcType="VARCHAR" />
+		<result column="head_icon" property="head_icon" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="images" property="images" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+		<result column="editor_id" property="editor_id" jdbcType="INTEGER" />
+		<result column="spuid" property="spuid" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		user_id,
+		nick_name,
+		head_icon,
+		comment,
+		images,
+		create_time,
+		update_time,
+		editor_id,
+		spuid
+	</sql>
+	
+	<sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{user_id,jdbcType=INTEGER},
+    	#{nick_name,jdbcType=VARCHAR},
+    	#{head_icon,jdbcType=VARCHAR},
+    	#{comment,jdbcType=VARCHAR},
+    	#{images,jdbcType=VARCHAR},
+    	#{create_time,jdbcType=TIMESTAMP},
+    	#{update_time,jdbcType=TIMESTAMP},
+    	#{editor_id,jdbcType=INTEGER},
+    	#{spuid,jdbcType=VARCHAR}
+    </sql>
+	
+	<!-- 列表 -->
+	<select id="getYMCommentData" resultMap="BaseResultMap" parameterType="com.data.display.model.rich.YMComment">
+		select
+		<include refid="Base_Column_List" />
+		from ym_comment
+		order by create_time desc
+	</select>
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_comment
+		where id = #{id}
+	</select>
+
+	<select id="selectByUserId" resultType="java.util.HashMap" parameterType="java.lang.String">
+		select
+			id,nick_name,head_icon,create_time,status
+		from ym_virtual_user
+		where id = #{id}
+	</select>
+
+	
+	<insert id="addYMCommentData" useGeneratedKeys="true" keyProperty="id" parameterType="com.data.display.model.rich.YMComment">
+    	INSERT INTO ym_comment (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+    </insert>
+	
+	<update id="editYMCommentData" parameterType="com.data.display.model.rich.YMComment">
+		update ym_comment
+		<set>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+				images = #{images,jdbcType=VARCHAR},
+			<if test="editor_id != null">
+				editor_id = #{editor_id,jdbcType=INTEGER},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="spuid != null">
+				spuid = #{spuid,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	
+	
+</mapper>

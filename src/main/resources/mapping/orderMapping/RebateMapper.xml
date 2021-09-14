@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.RebateMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.order.Rebate">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="source_id" property="source_id" jdbcType="INTEGER" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="sub_order_no" property="sub_order_no" jdbcType="VARCHAR" />
+		<result column="group_num" property="group_num" jdbcType="VARCHAR" />
+		<result column="skuid" property="skuid" jdbcType="VARCHAR" />
+		<result column="commission" property="commission" jdbcType="DECIMAL" />
+		<result column="layer" property="layer" jdbcType="INTEGER" />
+		<result column="ratio" property="ratio" jdbcType="DECIMAL" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+		<result column="settle_time" property="settle_time" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		user_id,
+		source_id,
+		order_no,
+		sub_order_no,
+		group_num,
+		skuid,
+		commission,
+		layer,
+		ratio,
+		create_time,
+		update_time,
+		settle_time,
+		status
+	</sql>
+
+	<select id="test" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Rebate">
+		SELECT * FROM ym_rebate where order_no IN(
+		SELECT order_no FROM ym_order WHERE DATE_FORMAT(ywc_time,'%Y-%m-%d') &lt; '2019-07-26' AND if_primary = 0 AND order_status = 'ywc' AND to_examine_status = 0
+		) AND status = 1
+	</select>
+
+
+
+	<!-- 列表 -->
+	<select id="getRebateData" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Rebate">
+		select
+		<include refid="Base_Column_List" />
+		from ym_rebate
+	</select>
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_rebate
+		where id = #{id}
+	</select>
+	
+	<select id="selectRebateByOthers" resultMap="BaseResultMap" parameterType="com.data.display.model.order.Rebate">
+		select
+		<include refid="Base_Column_List" />
+		from ym_rebate
+		where 1=1
+		<if test="user_id != null">
+			and user_id = #{user_id}
+		</if>
+		<if test="order_no != null">
+			and order_no = #{order_no}
+		</if>
+		<if test="sub_order_no != null">
+			and sub_order_no = #{sub_order_no}
+		</if>
+		<if test="skuid != null">
+			and skuid = #{skuid}
+		</if>
+		<if test="status != null">
+			and status = #{status}
+		</if>
+	</select>
+	
+	<update id="updateRebate" parameterType="com.data.display.model.order.Rebate">
+		update ym_rebate
+		<set>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="settle_time != null">
+				settle_time = #{settle_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+
+	<update id="updateYmAcountBill" parameterType="com.data.display.model.user.YmAcountBill">
+		update ym_acount_bill
+		<set>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="settle_time != null">
+				settle_time = #{settle_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where order_no = #{order_no,jdbcType=VARCHAR}
+	</update>
+
+
+</mapper>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.GroupTeamMapper" >
+    <resultMap id="BaseResultMap" type="com.data.display.model.commodity.GroupTeam" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="spuid" jdbcType="VARCHAR" property="spuid" />
+        <result column="user_id" jdbcType="INTEGER" property="user_id" />
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+        <result column="end_time" property="end_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+    id,
+    spuid,
+    user_id,
+    create_time,
+    update_time,
+    end_time
+  </sql>
+
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+	    #{spuid,jdbcType=VARCHAR},
+	    #{user_id,jdbcType=INTEGER},
+	    #{create_time,jdbcType=TIMESTAMP},
+	    #{update_time,jdbcType=TIMESTAMP},
+	    #{end_time,jdbcType=TIMESTAMP}
+    </sql>
+
+    <select id="selectDataBySpuid" parameterType="java.lang.String" resultType="com.data.display.model.commodity.GroupTeam">
+	    SELECT
+	      <include refid="Base_Column_List" />
+	    FROM ym_group_team WHERE user_id = #{user_id}
+    </select>
+
+    <insert id="insertData" parameterType="com.data.display.model.commodity.GroupTeam">
+        INSERT INTO ym_group_team (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+    </insert>
+
+    <update id="updateGroup" parameterType="com.data.display.model.commodity.GroupTeam">
+        UPDATE ym_group_team
+        <set>
+            <if test="spuid != null">
+                spuid = #{spuid,jdbcType=INTEGER},
+            </if>
+            <if test="update_time != null">
+                update_time = #{update_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="end_time != null">
+                end_time = #{end_time,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  		delete from ym_group_team where id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.YMGrouperMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.order.YMGrouper">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="spuid" property="spuid" jdbcType="VARCHAR" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="chances_num" property="chances_num" jdbcType="INTEGER" />
+		<result column="forever_valid" property="forever_valid" jdbcType="INTEGER" />
+		<result column="valid_time" property="valid_time" jdbcType="TIMESTAMP" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="assemble_number" property="assemble_number" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		spuid,
+		user_id,
+		chances_num,
+		forever_valid,
+		valid_time,
+		create_time,
+		status,
+		assemble_number
+	</sql>
+
+
+	<sql id="Base_Column_List2">
+		a.user_id,
+		a.create_time,
+		b.nick_name,
+		c.addr_name,
+		c.addr_mobile,
+		d.num,
+		g.uperid,
+		e.nick_name AS nickname,
+		f.addr_name AS addrname
+	</sql>
+
+
+	<select id="selectGrouperByTime" resultMap="BaseResultMap" parameterType="com.data.display.model.order.YMGrouper">
+		select
+		<include refid="Base_Column_List2" />
+		from ym_grouper a
+		LEFT JOIN ym_user_info b ON a.user_id = b.user_id
+		LEFT JOIN ym_order c ON a.user_id = c.user_id
+		LEFT JOIN ym_order_detail d ON c.order_no = d.order_no
+		LEFT JOIN ym_ascription g ON a.user_id = g.user_id
+		LEFT JOIN ym_user_info e ON g.uperid = e.user_id
+		LEFT JOIN ym_order f ON g.uperid = f.user_id
+		where a.forever_valid = 1 and DATE_FORMAT(a.create_time,'%Y-%m-%d') = #{beginDate} AND a.spuid = #{spuid} GROUP BY a.user_id
+	</select>
+
+	<select id="selectNewGrouper" resultType="com.data.display.model.user.UserInfo" parameterType="java.lang.String">
+		select
+			a.spuid,
+			IFNULL(a.user_id,"") as user_id,
+			a.forever_valid,
+			IFNULL(a.create_time,"") as create_time,
+			IFNULL(b.nick_name,"") as nick_name,
+			IFNULL(b.phone,"") as phone,
+			IFNULL(b.head_icon,"") as head_icon
+		from ym_grouper a
+		LEFT JOIN ym_user_info b ON a.user_id = b.user_id
+		where a.forever_valid = 1 and a.create_time &gt;= #{beginDate} and a.create_time &lt;= #{endDate} AND a.spuid = #{spuid} GROUP BY a.user_id
+	</select>
+
+
+	<select id="selectGrouper" resultMap="BaseResultMap" parameterType="com.data.display.model.order.YMGrouper">
+		select
+			<include refid="Base_Column_List" />
+		from ym_grouper where spuid = #{spuid} and user_id = #{user_id}
+	</select>
+
+
+	<update id="updateGrouper" parameterType="com.data.display.model.order.YMGrouper">
+		update ym_grouper
+		<set>
+			<if test="chances_num != null">
+				chances_num = #{chances_num,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+
+	
+</mapper>

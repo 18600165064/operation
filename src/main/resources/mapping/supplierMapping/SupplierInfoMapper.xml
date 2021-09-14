@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.supplierMapper.SupplierInfoMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.supplier.SupplierInfo">
+		<id column="s_id" property="s_id" jdbcType="INTEGER" />
+		<result column="jd_user_id" property="jd_user_id" jdbcType="INTEGER" />
+		<result column="public_or_private" property="public_or_private" jdbcType="INTEGER" />
+		<result column="s_name" property="s_name" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="country" property="country" jdbcType="VARCHAR" />
+		<result column="province" property="province" jdbcType="VARCHAR" />
+		<result column="postal_code" property="postal_code" jdbcType="VARCHAR" />
+		<result column="registered_address" property="registered_address" jdbcType="VARCHAR" />
+		<result column="s_account_group" property="s_account_group" jdbcType="VARCHAR" />
+		<result column="taxpayer_type" property="taxpayer_type" jdbcType="VARCHAR" />
+		<result column="val_added_tax_no" property="val_added_tax_no" jdbcType="VARCHAR" />
+		<result column="s_manager" property="s_manager" jdbcType="VARCHAR" />
+		<result column="business_address" property="business_address" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="office_phone" property="office_phone" jdbcType="VARCHAR" />
+		<result column="s_phone" property="s_phone" jdbcType="VARCHAR" />
+		<result column="fax" property="fax" jdbcType="VARCHAR" />
+		<result column="currency" property="currency" jdbcType="VARCHAR" />
+		<result column="bank_code" property="bank_code" jdbcType="VARCHAR" />
+		<result column="bank_name" property="bank_name" jdbcType="VARCHAR" />
+		<result column="bank_account_no" property="bank_account_no" jdbcType="VARCHAR" />
+		<result column="account_holder" property="account_holder" jdbcType="VARCHAR" />
+		<result column="company" property="company" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		s_id, 
+		jd_user_id, 
+		public_or_private, 
+		s_name,
+		city,
+		country,
+		province,
+		postal_code,
+		registered_address,
+		s_account_group,
+		taxpayer_type,
+		val_added_tax_no,
+		s_manager,
+		business_address,
+		email,
+		office_phone,
+		s_phone,
+		fax,
+		currency,
+		bank_code,
+		bank_name,
+		bank_account_no,
+		account_holder,
+		company,
+		create_time,
+		status
+	</sql>
+	
+	<sql id="Base_Insert_Values">
+    	#{s_id,jdbcType=INTEGER},
+    	#{jd_user_id,jdbcType=INTEGER},
+    	#{public_or_private,jdbcType=INTEGER},
+    	#{s_name,jdbcType=VARCHAR},
+    	#{city,jdbcType=VARCHAR},
+    	#{country,jdbcType=VARCHAR},
+    	#{province,jdbcType=VARCHAR},
+    	#{postal_code,jdbcType=VARCHAR},
+    	#{registered_address,jdbcType=VARCHAR},
+    	#{s_account_group,jdbcType=VARCHAR},
+    	#{taxpayer_type,jdbcType=VARCHAR},
+    	#{val_added_tax_no,jdbcType=VARCHAR},
+    	#{s_manager,jdbcType=VARCHAR},
+    	#{business_address,jdbcType=VARCHAR},
+    	#{email,jdbcType=VARCHAR},
+    	#{office_phone,jdbcType=VARCHAR},
+    	#{s_phone,jdbcType=VARCHAR},
+    	#{fax,jdbcType=VARCHAR},
+    	#{currency,jdbcType=VARCHAR},
+    	#{bank_code,jdbcType=VARCHAR},
+    	#{bank_name,jdbcType=VARCHAR},
+    	#{bank_account_no,jdbcType=VARCHAR},
+    	#{account_holder,jdbcType=VARCHAR},
+    	#{company,jdbcType=VARCHAR},
+    	#{create_time,jdbcType=TIMESTAMP},
+    	#{status,jdbcType=INTEGER}
+    </sql>
+	
+	<!-- 列表 -->
+	<select id="getSupplierInfoData" resultMap="BaseResultMap" parameterType="com.data.display.model.supplier.SupplierInfo">
+		select
+		<include refid="Base_Column_List" />
+		from ym_supplier_info
+		where 1=1
+		<if test="jd_user_id != 1">
+			and jd_user_id = #{jd_user_id}
+		</if>
+	</select>
+	
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_supplier_info where s_id = #{id}
+	</select>
+	
+	<select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_supplier_info where jd_user_id = #{userId}
+	</select>
+	
+	<insert id="addSupplierInfo" parameterType="com.data.display.model.supplier.SupplierInfo" useGeneratedKeys="true" keyProperty="s_id">
+		 INSERT INTO ym_supplier_info (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  	</insert>
+	
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  		delete from ym_supplier_info where id = #{s_id}
+  	</delete>
+  	
+  	<update id="updateSupplierInfo" parameterType="com.data.display.model.supplier.SupplierInfo">
+  		update ym_supplier_info
+		<set>
+			<if test="public_or_private != null">
+				public_or_private = #{public_or_private,jdbcType=INTEGER},
+			</if>
+			<if test="s_name != null">
+				s_name = #{s_name,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="postal_code != null">
+				postal_code = #{postal_code,jdbcType=VARCHAR},
+			</if>
+			<if test="registered_address != null">
+				registered_address = #{registered_address,jdbcType=VARCHAR},
+			</if>
+			<if test="s_account_group != null">
+				s_account_group = #{s_account_group,jdbcType=VARCHAR},
+			</if>
+			<if test="taxpayer_type != null">
+				taxpayer_type = #{taxpayer_type,jdbcType=VARCHAR},
+			</if>
+			<if test="val_added_tax_no != null">
+				val_added_tax_no = #{val_added_tax_no,jdbcType=VARCHAR},
+			</if>
+			<if test="s_manager != null">
+				s_manager = #{s_manager,jdbcType=VARCHAR},
+			</if>
+			<if test="business_address != null">
+				business_address = #{business_address,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="office_phone != null">
+				office_phone = #{office_phone,jdbcType=VARCHAR},
+			</if>
+			<if test="s_phone != null">
+				s_phone = #{s_phone,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null">
+				fax = #{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="currency != null">
+				currency = #{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="bank_code != null">
+				bank_code = #{bank_code,jdbcType=VARCHAR},
+			</if>
+			<if test="bank_name != null">
+				bank_name = #{bank_name,jdbcType=VARCHAR},
+			</if>
+			<if test="bank_account_no != null">
+				bank_account_no = #{bank_account_no,jdbcType=VARCHAR},
+			</if>
+			<if test="account_holder != null">
+				account_holder = #{account_holder,jdbcType=VARCHAR},
+			</if>
+			<if test="company != null">
+				company = #{company,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where s_id = #{s_id,jdbcType=INTEGER}
+  </update>
+  
+  <update id="updateSupplierInfoByUserId" parameterType="com.data.display.model.supplier.SupplierInfo">
+  		update ym_supplier_info
+		<set>
+			<if test="public_or_private != null">
+				public_or_private = #{public_or_private,jdbcType=INTEGER},
+			</if>
+			<if test="s_name != null">
+				s_name = #{s_name,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="country != null">
+				country = #{country,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="postal_code != null">
+				postal_code = #{postal_code,jdbcType=VARCHAR},
+			</if>
+			<if test="registered_address != null">
+				registered_address = #{registered_address,jdbcType=VARCHAR},
+			</if>
+			<if test="s_account_group != null">
+				s_account_group = #{s_account_group,jdbcType=VARCHAR},
+			</if>
+			<if test="taxpayer_type != null">
+				taxpayer_type = #{taxpayer_type,jdbcType=VARCHAR},
+			</if>
+			<if test="val_added_tax_no != null">
+				val_added_tax_no = #{val_added_tax_no,jdbcType=VARCHAR},
+			</if>
+			<if test="s_manager != null">
+				s_manager = #{s_manager,jdbcType=VARCHAR},
+			</if>
+			<if test="business_address != null">
+				business_address = #{business_address,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="office_phone != null">
+				office_phone = #{office_phone,jdbcType=VARCHAR},
+			</if>
+			<if test="s_phone != null">
+				s_phone = #{s_phone,jdbcType=VARCHAR},
+			</if>
+			<if test="fax != null">
+				fax = #{fax,jdbcType=VARCHAR},
+			</if>
+			<if test="currency != null">
+				currency = #{currency,jdbcType=VARCHAR},
+			</if>
+			<if test="bank_code != null">
+				bank_code = #{bank_code,jdbcType=VARCHAR},
+			</if>
+			<if test="bank_name != null">
+				bank_name = #{bank_name,jdbcType=VARCHAR},
+			</if>
+			<if test="bank_account_no != null">
+				bank_account_no = #{bank_account_no,jdbcType=VARCHAR},
+			</if>
+			<if test="account_holder != null">
+				account_holder = #{account_holder,jdbcType=VARCHAR},
+			</if>
+			<if test="company != null">
+				company = #{company,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+		</set>
+		where jd_user_id = #{jd_user_id,jdbcType=INTEGER}
+  </update>
+	
+</mapper>

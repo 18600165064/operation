@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.bonusMapper.BonusStockholderMapper" >
+    <resultMap id="BaseResultMap" type="com.data.display.model.bonus.BonusStockholder" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="user_id" jdbcType="INTEGER" property="user_id" />
+        <result column="spuid" jdbcType="VARCHAR" property="spuid" />
+        <result column="members_num_on_upgrade" jdbcType="INTEGER" property="members_num_on_upgrade" />
+        <result column="pro_sales_on_upgrade" jdbcType="INTEGER" property="pro_sales_on_upgrade" />
+        <result column="total_pro_sales" jdbcType="INTEGER" property="total_pro_sales" />
+        <result column="upgrade_time" property="upgrade_time" jdbcType="TIMESTAMP" />
+        <result column="hit_target_time" property="hit_target_time" jdbcType="TIMESTAMP" />
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="real_pro_sales" jdbcType="INTEGER" property="real_pro_sales" />
+        <result column="more_sales" jdbcType="INTEGER" property="more_sales" />
+        <result column="stock_ratio" property="stock_ratio" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,
+        user_id,
+        spuid,
+        members_num_on_upgrade,
+        pro_sales_on_upgrade,
+        total_pro_sales,
+        upgrade_time,
+        hit_target_time,
+        create_time,
+        update_time,
+        remark,
+        real_pro_sales,
+        more_sales,
+        stock_ratio
+    </sql>
+
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{user_id,jdbcType=INTEGER},
+	    #{spuid,jdbcType=VARCHAR},
+	    #{members_num_on_upgrade,jdbcType=INTEGER},
+	    #{pro_sales_on_upgrade,jdbcType=INTEGER},
+	    #{total_pro_sales,jdbcType=INTEGER},
+	    #{upgrade_time,jdbcType=TIMESTAMP},
+	    #{hit_target_time,jdbcType=TIMESTAMP},
+	    #{create_time,jdbcType=TIMESTAMP},
+	    #{update_time,jdbcType=TIMESTAMP},
+	    #{remark,jdbcType=VARCHAR},
+	    #{real_pro_sales,jdbcType=INTEGER},
+	    #{more_sales,jdbcType=INTEGER},
+	    #{stock_ratio,jdbcType=DECIMAL}
+    </sql>
+
+    <select id="getData" parameterType="com.data.display.model.bonus.BonusStockholder" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ym_bonus_stockholder
+        where spuid = #{spuid}
+        AND DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{create_time},'%Y-%m-%d') and stock_ratio > 0
+    </select>
+
+    <select id="getData3" parameterType="com.data.display.model.bonus.BonusStockholder" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ym_bonus_stockholder
+        where DATE_FORMAT(create_time,'%Y-%m') &lt;= DATE_FORMAT(#{create_time},'%Y-%m') and stock_ratio > 0
+    </select>
+
+
+    <select id="getCountBySpuid" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT
+          SUM(total_pro_sales) as count
+        FROM ym_bonus_stockholder
+        where spuid = #{spuid}
+        AND DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{time} and stock_ratio > 0
+    </select>
+
+    <!-- 根据spuid查询昨天有该spu销量的股东 -->
+    <select id="getDataBySpuid" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+          <include refid = "Base_Column_List" />
+        FROM
+          ym_bonus_stockholder
+        WHERE
+          user_id IN (
+            SELECT DISTINCT
+              (stockerholder_id)
+            FROM
+              ym_order_detail a
+            LEFT JOIN ym_order b ON a.order_no = b.order_no
+            WHERE
+              a.skuid = (
+            SELECT
+              skuid
+            FROM
+              ym_product
+            WHERE
+              spuid = #{spuid}
+            )
+          AND DATE_FORMAT(a.create_time, '%Y-%m-%d') = #{time}
+          AND b.stockerholder_id != 0
+          )
+        AND stock_ratio > 0
+        and spuid = #{spuid}
+    </select>
+
+
+    <update id="updateStoc" parameterType="com.data.display.model.bonus.BonusStockholder">
+        update ym_bonus_stockholder
+        <set>
+            <if test="stock_ratio != null">
+                stock_ratio = #{stock_ratio,jdbcType=DECIMAL},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+</mapper>

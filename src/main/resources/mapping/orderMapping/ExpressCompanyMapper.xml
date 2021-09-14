@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.ExpressCompanyMapper" >
+  <resultMap id="BaseResultMap" type="com.data.display.model.order.ExpressCompany" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="express_name" property="express_name" jdbcType="VARCHAR" />
+    <result column="company_code" property="company_code" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="company_type" property="company_type" jdbcType="VARCHAR" />
+    <result column="country_code" property="country_code" jdbcType="VARCHAR" />
+    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,
+    express_name, 
+    company_code, 
+    remark, 
+    company_type, 
+    country_code,
+    create_time
+  </sql>
+  
+  <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{express_name,jdbcType=VARCHAR},
+    	#{company_code,jdbcType=VARCHAR},
+    	#{remark,jdbcType=VARCHAR},
+    	#{company_type,jdbcType=VARCHAR},
+    	#{country_code,jdbcType=VARCHAR},
+    	#{create_time,jdbcType=TIMESTAMP}
+    </sql>
+  
+  <select id="getData" resultMap="BaseResultMap" parameterType="com.data.display.model.order.ExpressCompany" >
+    select
+    <include refid="Base_Column_List" />
+    from ym_express_company
+  </select>
+  
+  <select id="selectByOthers" resultMap="BaseResultMap" parameterType="com.data.display.model.order.ExpressCompany" >
+    select
+    <include refid="Base_Column_List" />
+    from ym_express_company
+    where 1=1
+    <if test="company_code">
+    	and company_code = #{company_code}
+    </if>
+    <if test="express_name">
+    	and express_name = #{express_name}
+    </if>
+  </select>
+
+
+  <insert id="addExpressCompany" parameterType="com.data.display.model.order.ExpressCompany">
+    INSERT INTO ym_express_company
+    (<include refid="Base_Column_List" />)
+    VALUES
+    (<include refid="Base_Insert_Values" />)
+  </insert>
+
+</mapper>

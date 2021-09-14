@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.commodityMapper.SpecificationsMapper" >
+  <resultMap id="BaseResultMap" type="com.data.display.model.commodity.Specifications" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="spec_name" property="spec_name" jdbcType="VARCHAR" />
+    <result column="spec_value" property="spec_value" jdbcType="VARCHAR" />
+    <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id,
+    spec_name, 
+    spec_value, 
+    create_time
+  </sql>
+  
+  <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{spec_name,jdbcType=VARCHAR},
+    	#{spec_value,jdbcType=VARCHAR},
+    	#{create_time,jdbcType=TIMESTAMP}
+  </sql>
+  
+  <sql id="Base_spec_and_cate_List" >
+    id,
+    sid, 
+    cid, 
+    create_time
+  </sql>
+  
+  <sql id="Base_spec_and_cate_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{sid,jdbcType=INTEGER},
+    	#{cid,jdbcType=INTEGER},
+    	#{create_time,jdbcType=TIMESTAMP}
+  </sql>
+  
+  
+  
+  <!-- 查询所有规格 -->
+  <select id="getSpecificationsData" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ym_spec_define
+    where 1=1
+    <if test="spec_name != null and spec_name != ''">
+    	and spec_name = #{spec_name}
+    </if>
+  </select>
+  
+  
+  <select id="selSpecName" resultMap="BaseResultMap">
+    	SELECT spec_name from  ym_spec_define GROUP BY spec_name
+  </select>
+  
+  <!-- 根据第三级类目ID获取对应的规格 -->
+  <select id="getAllSpecificationsByCid" resultMap="BaseResultMap" parameterType="String">
+    SELECT 
+   	<include refid="Base_Column_List" /> 
+    FROM ym_spec_define 
+    WHERE id IN(SELECT sid FROM ym_spec_and_cate WHERE cid = #{cid})
+  </select>
+  
+   <select id="selectById" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ym_spec_define
+    where id = #{id}
+  </select>
+  
+  <select id="getData" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from ym_spec_define
+    where 1=1
+    <if test="spec_name != null and spec_name != ''">
+    	and spec_name = #{spec_name}
+    </if>
+    order by spec_name desc
+  </select>
+  
+  
+  <insert id="addSpecificationsData" parameterType="com.data.display.model.commodity.Specifications">
+		 INSERT INTO ym_spec_define (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+  </insert>
+  
+  
+  <update id="updateSpecifications" parameterType="com.data.display.model.commodity.Specifications">
+		update ym_spec_define
+		<set>
+			<if test="spec_name != null">
+				spec_name = #{spec_name,jdbcType=VARCHAR},
+			</if>
+			<if test="spec_value != null">
+				spec_value = #{spec_value,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+  
+  
+  
+</mapper>

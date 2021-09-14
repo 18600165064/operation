@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.bonusMapper.BonusPoolOutBillMapper" >
+    <resultMap id="BaseResultMap" type="com.data.display.model.bonus.BonusPoolOutBill" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="spuid" jdbcType="VARCHAR" property="spuid" />
+        <result column="pool_type" jdbcType="INTEGER" property="pool_type" />
+        <result column="user_id" jdbcType="INTEGER" property="user_id" />
+        <result column="amount" property="amount" jdbcType="DECIMAL" />
+        <result column="deduct_amount" property="deduct_amount" jdbcType="DECIMAL" />
+        <result column="pros_num" property="pros_num" jdbcType="DECIMAL" />
+        <result column="even_bonus" property="even_bonus" jdbcType="DECIMAL" />
+        <result column="bonus_ratio" property="bonus_ratio" jdbcType="DECIMAL" />
+        <result column="batch_no" jdbcType="VARCHAR" property="batch_no" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+        <result column="settle_time" property="settle_time" jdbcType="TIMESTAMP" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="bonus_ratio" property="more_amount" jdbcType="DECIMAL" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id,
+        spuid,
+        pool_type,
+        user_id,
+        amount,
+        deduct_amount,
+        pros_num,
+        even_bonus,
+        bonus_ratio,
+        batch_no,
+        status,
+        create_time,
+        update_time,
+        settle_time,
+        remark,
+        more_amount
+    </sql>
+
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+	    #{spuid,jdbcType=VARCHAR},
+    	#{pool_type,jdbcType=INTEGER},
+    	#{user_id,jdbcType=INTEGER},
+    	#{amount,jdbcType=DECIMAL},
+    	#{deduct_amount,jdbcType=DECIMAL},
+    	#{pros_num,jdbcType=DECIMAL},
+    	#{even_bonus,jdbcType=DECIMAL},
+    	#{bonus_ratio,jdbcType=DECIMAL},
+    	#{batch_no,jdbcType=VARCHAR},
+	    #{status,jdbcType=INTEGER},
+	    #{create_time,jdbcType=TIMESTAMP},
+	    #{update_time,jdbcType=TIMESTAMP},
+	    #{settle_time,jdbcType=TIMESTAMP},
+	    #{remark,jdbcType=VARCHAR},
+	    #{more_amount,jdbcType=DECIMAL}
+    </sql>
+
+    <select id="getData" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List" />
+        from ym_bonus_pool_out_bill
+        where pool_type = #{pool_type} and DATE_FORMAT(create_time,'%Y-%m-%d') = #{create_time} and status = 0
+    </select>
+
+
+    <select id="getData2" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          SUM(amount)as amount,user_id,SUM(deduct_amount)as deduct_amount,SUM(pros_num)as pros_num
+        from ym_bonus_pool_out_bill
+        where pool_type = #{pool_type} and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{create_time} and status = 0
+        GROUP BY user_id
+    </select>
+
+
+    <select id="getData3" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          <include refid="Base_Column_List" />
+        from ym_bonus_pool_out_bill
+        where pool_type = #{pool_type} and user_id = #{user_id} and create_time &gt;= #{beginDate} and create_time &lt;= #{endDate} and spuid = #{spuid}
+    </select>
+
+    <select id="getData4" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from ym_bonus_pool_out_bill
+        where pool_type = #{pool_type} and user_id = #{user_id} and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= #{create_time}
+    </select>
+
+
+    <insert id="addPoolOutBill" parameterType="com.data.display.model.bonus.BonusPoolOutBill">
+        INSERT INTO ym_bonus_pool_out_bill (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+    </insert>
+
+    <update id="updateOutBill" parameterType="com.data.display.model.bonus.BonusPoolOutBill" >
+        update ym_bonus_pool_out_bill
+        <set>
+            <if test="update_time != null">
+                update_time = #{update_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deduct_amount != null">
+                deduct_amount = #{deduct_amount,jdbcType=DECIMAL},
+            </if>
+            <if test="settle_time != null" >
+                settle_time = #{settle_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null and status != ''" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null and remark != ''" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+
+
+    <update id="updateOutBillByUserid" parameterType="com.data.display.model.bonus.BonusPoolOutBill" >
+        update ym_bonus_pool_out_bill
+        <set>
+            <if test="update_time != null">
+                update_time = #{update_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="settle_time != null" >
+                settle_time = #{settle_time,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null and status != ''" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null and remark != ''" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where
+          user_id = #{user_id,jdbcType=INTEGER}
+          and DATE_FORMAT(create_time,'%Y-%m-%d') &lt; #{month}
+          and status = 0
+          and pool_type = 2
+          and spuid = #{spuid}
+    </update>
+
+</mapper>

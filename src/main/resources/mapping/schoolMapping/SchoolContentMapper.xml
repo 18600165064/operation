@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.schoolMapper.SchoolContentMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.school.SchoolContent">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="colume_id" property="colume_id" jdbcType="INTEGER" />
+		<result column="title" property="title" jdbcType="VARCHAR" />
+		<result column="image" property="image" jdbcType="VARCHAR" />
+		<result column="spuid" property="spuid" jdbcType="VARCHAR" />
+		<result column="video_url" property="video_url" jdbcType="VARCHAR" />
+		<result column="content" property="content" jdbcType="VARCHAR" />
+		<result column="browse_num" property="browse_num" jdbcType="INTEGER" />
+		<result column="is_top" property="is_top" jdbcType="INTEGER" />
+		<result column="content_type" property="content_type" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+		<result column="is_show" property="is_show" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		colume_id,
+		title,
+		image,
+		spuid,
+		video_url,
+		content,
+		browse_num,
+		is_top,
+		content_type,
+		create_time,
+		update_time,
+		is_show
+	</sql>
+	
+	<sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{colume_id,jdbcType=INTEGER},
+    	#{title,jdbcType=VARCHAR},
+    	#{image,jdbcType=VARCHAR},
+    	#{spuid,jdbcType=VARCHAR},
+    	#{video_url,jdbcType=VARCHAR},
+    	#{content,jdbcType=VARCHAR},
+    	#{browse_num,jdbcType=INTEGER},
+    	#{is_top,jdbcType=INTEGER},
+		#{content_type,jdbcType=INTEGER},
+    	#{create_time,jdbcType=TIMESTAMP},
+    	#{update_time,jdbcType=TIMESTAMP},
+    	#{is_show,jdbcType=INTEGER}
+    </sql>
+	
+	<!-- 列表 -->
+	<select id="getContentData" resultMap="BaseResultMap" parameterType="com.data.display.model.school.SchoolContent">
+		select
+		<include refid="Base_Column_List" />
+		from ym_school_content
+	</select>
+
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_school_content
+		where id = #{id}
+	</select>
+
+	
+	<insert id="addSchoolContentData" parameterType="com.data.display.model.school.SchoolContent" useGeneratedKeys="true" keyProperty="id">
+    	INSERT INTO ym_school_content (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+    </insert>
+	
+	<update id="editShoolContentData" parameterType="com.data.display.model.school.SchoolContent">
+		update ym_school_content
+		<set>
+			<if test="colume_id != null">
+				colume_id = #{colume_id,jdbcType=INTEGER},
+			</if>
+			<if test="title != null">
+				title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="image != null">
+				image = #{image,jdbcType=VARCHAR},
+			</if>
+			<if test="spuid != null">
+				spuid = #{spuid,jdbcType=VARCHAR},
+			</if>
+			<if test="video_url != null">
+				video_url = #{video_url,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="browse_num != null">
+				browse_num = #{browse_num,jdbcType=INTEGER},
+			</if>
+			<if test="is_top != null">
+				is_top = #{is_top,jdbcType=INTEGER},
+			</if>
+			<if test="content_type != null">
+				content_type = #{content_type,jdbcType=INTEGER},
+			</if>
+			<if test="create_time != null">
+				create_time = #{create_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="update_time != null">
+				update_time = #{update_time,jdbcType=TIMESTAMP},
+			</if>
+			<if test="is_show != null">
+				is_show = #{is_show,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	
+	
+</mapper>

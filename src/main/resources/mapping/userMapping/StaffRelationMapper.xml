@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.userMapper.StaffRelationMapper">
+    <resultMap id="staffRelationMap" type="com.data.display.model.user.StaffRelation">
+        <id property="user_id" column="user_id"/>
+        <result property="director_id" column="director_id" jdbcType="INTEGER"/>
+        <result property="charge_id" column="charge_id" jdbcType="INTEGER"/>
+        <result property="level_u" column="level_u" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="nick_name" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="create_time" column="create_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+    	`user_id`,
+    	`director_id`,
+    	`charge_id`,
+    	`status`,
+    	`level_u`,
+    	`nick_name`,
+    	`create_time`
+    </sql>
+    
+    <sql id="Base_Insert_Values">
+    	#{user_id,jdbcType=INTEGER},
+    	#{director_id,jdbcType=INTEGER},
+    	#{charge_id,jdbcType=INTEGER},
+    	#{status,jdbcType=INTEGER},
+    	#{level_u,jdbcType=INTEGER},
+    	#{nick_name,jdbcType=VARCHAR},
+    	#{create_time,jdbcType=TIMESTAMP}
+    </sql>
+    
+    <!-- 根据id查找 -->
+   <select id="getByUserId" parameterType="java.lang.String" resultMap="staffRelationMap">
+       select
+       	<include refid="Base_Column_List" />
+       from staff_relation
+       where user_id = #{userId,jdbcType=INTEGER}
+       LIMIT 1
+   </select>
+    
+    <select id="relationData" parameterType="String" resultType="java.util.HashMap">
+    	select
+    		a.user_id,
+    		a.director_id,
+    		a.cheif_id,
+    		a.inviter_id,
+    		a.level_u,
+    		a.status
+    	from yuemee.user_relation a
+    	<where>
+    		<if test="levelU == 1 or levelU == 0">
+    			a.user_id = #{userId}
+    		</if>
+    		<if test="levelU == 2">
+    			a.cheif_id = #{userId}
+    		</if>
+    		<if test="levelU == 3">
+    			a.director_id = #{userId}
+    		</if>
+    	</where>
+    </select>
+    
+    <insert id="addStaffRelation" parameterType="com.data.display.model.user.StaffRelation">
+    	INSERT INTO staff_relation 
+    		(<include refid="Base_Column_List" />) 
+    	VALUES 
+    		(<include refid="Base_Insert_Values" />)
+    </insert>
+    
+    <update id="update" parameterType="com.data.display.model.user.StaffRelation">
+    	UPDATE staff_relation
+    		<set>
+    			<if test="level_u != null">
+    				`level_u` = #{level_u,jdbcType=INTEGER},
+    			</if>
+    			<if test="director_id != null">
+    				director_id = #{director_id,jdbcType=INTEGER},
+    			</if>
+    			<if test="charge_id != null">
+    				charge_id = #{charge_id,jdbcType=INTEGER},
+    			</if>
+    		</set>
+    		where user_id = #{user_id}
+    </update>
+    
+</mapper>

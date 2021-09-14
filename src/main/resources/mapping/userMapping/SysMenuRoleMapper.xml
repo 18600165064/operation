@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.userMapper.SysMenuRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.data.display.model.user.SysMenuRole" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="menu_level" property="menu_level" jdbcType="INTEGER" />
+    <result column="menu_name" property="menu_name" jdbcType="VARCHAR" />
+    <result column="menu_url" property="menu_url" jdbcType="VARCHAR" />
+    <result column="menu_parent" property="menu_parent" jdbcType="INTEGER" />
+    <result column="role" property="role" jdbcType="INTEGER" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+  </resultMap>
+  
+   <sql id="Base_Column_List" >
+	    id, 
+	    menu_level, 
+	    menu_name, 
+	    menu_url, 
+	    menu_parent, 
+	    role,
+	    icon
+   </sql>
+  
+   <sql id="Base_Insert_Values">
+        #{id,jdbcType=INTEGER},
+        #{menu_level,jdbcType=INTEGER},
+        #{menu_name,jdbcType=VARCHAR},
+        #{menu_url,jdbcType=VARCHAR},
+        #{menu_parent,jdbcType=INTEGER},
+        #{role,jdbcType=INTEGER},
+        #{icon,jdbcType=VARCHAR}
+    </sql>
+  
+  <!-- 根据用户ID获取所拥有的菜单 -->
+  <select id="getSysMenu" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from sys_menu_role  where role =(SELECT sys_role_id FROM sys_role_user  where  sys_user_id=#{userId})
+  </select>
+  
+   <!-- 根据id查找 -->
+   <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+       select
+       	<include refid="Base_Column_List" />
+       from sys_menu_role
+       where `ID` = #{id,jdbcType=INTEGER}
+       LIMIT 1
+   </select>
+  
+  <!-- 获取所有菜单 -->
+  <select id="getMenuRoleData" resultMap="BaseResultMap">
+	    select 
+	    	<include refid="Base_Column_List" /> 
+	    from sys_menu_role
+	    GROUP BY menu_url,menu_name ORDER BY id ASC
+  </select>
+  
+  <!-- 根据角色ID获取拥有的菜单 -->
+  <select id="isCheckedData" parameterType="String" resultMap="BaseResultMap">
+			select 
+				<include refid="Base_Column_List" />  
+			from sys_menu_role  
+			where role =#{roleId}
+  </select>
+  
+  <!-- 新增 -->
+  <insert id="insert" parameterType="com.data.display.model.user.SysMenuRole" useGeneratedKeys="true" keyProperty="id">
+  		INSERT INTO sys_menu_role
+  			(<include refid="Base_Column_List" />)
+  		VALUES
+<!--   		<foreach collection="list" item="item" index="index" open="" separator="," close=""> -->
+  			(<include refid="Base_Insert_Values" />)
+<!--   		</foreach> -->
+  </insert>
+  
+  <!-- 更新 -->
+  <update id="update" parameterType="com.data.display.model.user.SysMenuRole">
+  		UPDATE sys_menu_role
+  		<set>
+  			<if test="menu_level != null">
+	            `menu_level` = #{menu_level,jdbcType=INTEGER},
+	        </if>
+	        <if test="menu_name != null and menu_name != ''">
+	            `menu_name` = #{menu_name,jdbcType=VARCHAR},
+	        </if>
+	        <if test="menu_url != null and menu_url != ''">
+	            `menu_url` = #{menu_url,jdbcType=VARCHAR},
+	        </if>
+	        <if test="menu_parent != null">
+	            `menu_parent` = #{menu_parent,jdbcType=INTEGER},
+	        </if>
+	        <if test="role != null">
+	            `role` = #{role,jdbcType=INTEGER}
+	        </if>
+  		</set>
+  		where `id` = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <!-- 删除 -->
+  <delete id="delete" parameterType="java.lang.Integer">
+  		DELETE FROM sys_menu_role WHERE id = #{id}
+  </delete>
+  
+  <!-- 自定义 -->
+  <select id="countMenu" resultType="java.util.HashMap">
+  		SELECT COUNT(menu_name) as count,menu_name as menuName 
+  		FROM sys_menu_role
+		GROUP BY
+			menu_url,
+			menu_name
+		ORDER BY
+			id ASC 
+  </select>
+  
+</mapper>

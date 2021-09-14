@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.userMapper.RoleMapper">
+    <resultMap id="roleMap" type="com.data.display.model.user.SysRole">
+        <id property="id" column="ID" jdbcType="INTEGER" />
+        <result property="name" column="name" jdbcType="VARCHAR" />
+        <result property="description" column="description" jdbcType="VARCHAR" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+    	`id`,
+    	`name`,
+    	`description`
+    </sql>
+    
+     <sql id="Base_userRole_Column_List">
+    	`sys_user_id`,
+    	`sys_role_id`
+    </sql>
+    
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{name,jdbcType=VARCHAR},
+    	#{description,jdbcType=VARCHAR}
+    </sql>
+    
+    <sql id="Base_userRole_Insert_Values">
+    	#{sys_user_id,jdbcType=VARCHAR},
+    	#{sys_role_id,jdbcType=VARCHAR}
+    </sql>
+    
+    <!-- 获取角色信息 -->
+    <select id="getRoleData" parameterType="String" resultMap="roleMap">
+		SELECT a.id,a.`name`,a.description FROM sys_role a WHERE 1=1 and a.id != 1
+			<if test="userId != '' and userId != null ">
+			and EXISTS (
+			SELECT sys_role_id,sys_user_id FROM sys_role_user b WHERE a.id = b.sys_role_id AND b.sys_user_id = #{userId})
+			</if>
+	        <if test="description != '' and description != null ">
+	          and a.description like CONCAT('%',#{description},'%')
+	        </if>
+	        <if test="name != '' and name != null ">
+	          and a.name = #{name}
+	        </if>
+	         ORDER BY a.id DESC
+    </select>
+    
+    <!-- 根据roleId获取信息 -->
+    <select id="getRoleById" parameterType="String" resultMap="roleMap">
+    	SELECT a.id,a.`name`,a.description FROM sys_role a WHERE a.id = #{roleId} LIMIT 1
+    </select>
+    
+    <!-- 根据用户ID统计所有的角色数 -->
+    <select id="userRoleCount" parameterType="String" resultType="int">
+    	SELECT COUNT(*) FROM sys_role_user where sys_user_id = #{userId}
+    </select>
+    
+    <!-- 新增角色 -->
+    <insert id="addRoleData" useGeneratedKeys="true" keyProperty="id" parameterType="com.data.display.model.user.SysRole">
+    	INSERT INTO sys_role (<include refid="Base_Column_List" />) VALUES (<include refid="Base_Insert_Values" />)
+    </insert>
+    
+    <!-- 新增用户角色关联 -->
+    <insert id="addUserRole" parameterType="String">
+    	INSERT INTO sys_role_user (<include refid="Base_userRole_Column_List" />) VALUES (<include refid="Base_userRole_Insert_Values" />)
+    </insert>
+    
+    <!-- 删除角色，用户角色关联，菜单角色关联 -->
+    <delete id="delRole" parameterType="String">
+    	DELETE a,b,c FROM sys_role a 
+			LEFT JOIN sys_role_user b ON a.id = b.sys_role_id 
+			LEFT JOIN sys_menu_role c ON a.id = c.role 
+		WHERE a.id = #{roleId}
+    </delete>
+    
+     <!-- 删除用户角色关联 -->
+    <delete id="delUserRole" parameterType="String">
+		DELETE FROM sys_role_user WHERE sys_role_id = #{roleId} AND sys_user_id = #{userId}
+    </delete>
+    
+    <!-- 修改 -->
+    <update id="updateRole">
+    	UPDATE sys_role
+  		<set>
+  			<if test="name != null and name != ''">
+	            `name` = #{name,jdbcType=VARCHAR},
+	        </if>
+	        <if test="description != null and description != ''">
+	            `description` = #{description,jdbcType=VARCHAR},
+	        </if>
+  		</set>
+  		where `id` = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <!-- 修改角色关联 -->
+    <update id="updateUserRole">
+    	UPDATE sys_role_user set sys_role_id = #{roleId2} WHERE sys_role_id = #{roleId} AND sys_user_id = #{userId}
+    </update>
+    
+</mapper>

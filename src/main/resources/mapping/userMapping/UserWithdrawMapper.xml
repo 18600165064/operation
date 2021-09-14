@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.userMapper.UserWithdrawMapper">
+    <resultMap id="userWithdrawMap" type="com.data.display.model.user.UserWithdraw">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="user_id" property="user_id" jdbcType="INTEGER" />
+        <result column="back_user_id" property="back_user_id" jdbcType="INTEGER" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+        <result column="total" property="total" jdbcType="DECIMAL" />
+        <result column="money" property="money" jdbcType="DECIMAL" />
+		<result column="card_no" property="card_no" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="audit_time" property="audit_time" jdbcType="TIMESTAMP" />
+		<result column="process_time" property="process_time" jdbcType="TIMESTAMP" />
+		<result column="total_money" property="total_money" jdbcType="DECIMAL" />
+		<result column="finish_time" property="finish_time" jdbcType="TIMESTAMP" />
+		<result column="poundage" property="poundage" jdbcType="DECIMAL" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+    	id,
+    	user_id,
+    	back_user_id,
+    	order_no,
+    	total,
+    	money,
+    	card_no,
+    	status,
+    	create_time,
+    	audit_time,
+    	process_time,
+    	total_money,
+    	finish_time,
+    	poundage
+    </sql>
+    
+    <sql id="Base_Insert_Values">
+    	#{id,jdbcType=INTEGER},
+    	#{user_id,jdbcType=INTEGER},
+    	#{back_user_id,jdbcType=INTEGER},
+    	#{order_no,jdbcType=VARCHAR},
+    	#{total,jdbcType=DECIMAL},
+		#{money,jdbcType=DECIMAL},   
+    	#{card_no,jdbcType=VARCHAR},
+    	#{status,jdbcType=INTEGER},
+    	#{create_time,jdbcType=TIMESTAMP},
+    	#{audit_time,jdbcType=TIMESTAMP},
+		#{process_time,jdbcType=TIMESTAMP},
+		#{total_money,jdbcType=DECIMAL},
+		#{finish_time,jdbcType=TIMESTAMP},   
+		#{poundage,jdbcType=DECIMAL}
+    </sql>
+
+    <!-- 获取所有用户信息 -->
+    <select id="getUserWithdrawData" parameterType="com.data.display.model.user.UserWithdraw" resultMap="userWithdrawMap">
+        select
+           <include refid="Base_Column_List" />
+        from ym_user_withdraw
+        where 1=1
+		<if test="user_id != null and user_id != ''">
+			and user_id = #{user_id,jdbcType=INTEGER}
+		</if>
+		<if test="strDate != null and strDate != ''">
+			and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= #{strDate}
+		</if>
+		<if test="endDate != null and endDate != ''">
+			and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= #{endDate}
+		</if>
+        order by create_time desc
+    </select>
+    
+    
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="userWithdrawMap">
+        select
+           <include refid="Base_Column_List" />
+        from ym_user_withdraw
+        where id = #{id}
+        order by create_time desc
+    </select>
+    
+    
+    <!-- 修改 -->
+    <update id="updateUserWithdraw" parameterType="com.data.display.model.user.UserWithdraw">
+    	UPDATE ym_user_withdraw
+  		<set>
+	        <if test="status != null">
+	            status = #{status,jdbcType=INTEGER},
+	        </if>
+	        <if test="back_user_id">
+	        	back_user_id = #{back_user_id},
+	        </if>
+	        <if test="process_time">
+	        	process_time = #{process_time},
+	        </if>
+  		</set>
+  		where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    
+</mapper>

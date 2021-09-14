@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.orderMapper.AssembleRefundMapper">
+	<resultMap id="BaseResultMap" type="com.data.display.model.order.AssembleRefund">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="group_num" property="group_num" jdbcType="VARCHAR" />
+		<result column="order_no" property="order_no" jdbcType="VARCHAR" />
+		<result column="refund_order_no" property="refund_order_no" jdbcType="VARCHAR" />
+		<result column="refund_price" property="refund_price" jdbcType="DECIMAL" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="update_time" property="update_time" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,
+		user_id,
+		group_num,
+		order_no,
+		refund_order_no,
+		refund_price,
+		create_time,
+		status,
+		update_time
+	</sql>
+
+	<select id="selectByOrderNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from ym_assemble_refund
+		where order_no = #{order_no}
+	</select>
+	
+</mapper>

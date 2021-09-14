@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.display.mapper.userMapper.UserAccountBillMapper">
+    <resultMap id="userAccountBillMap" type="com.data.display.model.user.UserAccountBill">
+        <id column="bill_id" property="bill_id" jdbcType="INTEGER" />
+		<result column="user_id" property="user_id" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="change_amt" property="change_amt" jdbcType="DECIMAL" />
+		<result column="wallet" property="wallet" jdbcType="DECIMAL" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+    </resultMap>
+    
+    <sql id="Base_Column_List">
+    	bill_id,
+    	user_id,
+    	type,
+    	change_amt,
+    	wallet,
+    	remark,
+    	create_time
+    </sql>
+    
+    <sql id="Base_Insert_Values">
+    	#{bill_id,jdbcType=INTEGER},
+    	#{user_id,jdbcType=INTEGER},
+    	#{type,jdbcType=VARCHAR},
+    	#{change_amt,jdbcType=DECIMAL},
+    	#{wallet,jdbcType=DECIMAL},
+    	#{remark,jdbcType=VARCHAR},
+    	#{create_time,jdbcType=TIMESTAMP}
+    </sql>
+
+    <select id="getUserAccountBillData" parameterType="String" resultMap="userAccountBillMap">
+        select
+           <include refid="Base_Column_List" />
+        from ym_user_account_bill
+        order by create_time desc
+    </select>
+    
+     <select id="getUserAccountBillByOthers" resultType="com.data.display.model.user.UserAccountBill">
+       SELECT 
+       	<include refid="Base_Column_List" /> 
+       FROM ym_user_account_bill
+       where user_id = #{user_id}
+    </select>
+    
+	 <insert id="addUserAccountBillData" parameterType="com.data.display.model.user.UserAccountBill" useGeneratedKeys="true" keyProperty="id">
+    	INSERT INTO ym_user_account_bill 
+    		(<include refid="Base_Column_List" />) 
+    	VALUES 
+    		(<include refid="Base_Insert_Values" />)
+    </insert>    
+    
+</mapper>
